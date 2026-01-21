@@ -1,0 +1,32 @@
+- links_category: 
+  has_thumbnail: true
+  list:
+      - name: Week's Blog
+        link: https://www.weekyu.dpdns.org
+        description: 时不时更新
+        avatar: /images/Profile.jpg
+        thumbnail: /images/desc-image.jpg # has_thumbnail 为 true 时才需要
+ 
+- links_category: 
+  has_thumbnail: false
+  list:
+      - name: Cloudflare
+        link: https://dash.cloudflare.com/
+        description: 赛博活佛 提供DNS及CDN
+        avatar: /images/avatar-1.jpg
+      - name: Github
+        link: https://github.com/
+        description: 全球最大的免费代码托管平台
+        avatar: /images/avatar-2.jpg
+      - name: EdgeOne
+        link: https://console.tencentcloud.com/
+        description: 腾讯云边缘计算 类似Cloudflare
+        avatar: /images/avatar-3.jpg
+      - name: ITDOG
+        link: https://www.itdog.cn/
+        description: 网络测试
+        avatar: /images/avatar-4.jpg
+      - name: DigitalPlat Domain Dashboard
+        link: https://dash.domain.digitalplat.org/
+        description: org域名申请
+        avatar: /images/avatar-5.jpg

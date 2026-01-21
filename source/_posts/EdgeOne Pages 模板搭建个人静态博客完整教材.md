@@ -1,0 +1,657 @@
+---
+title: EdgeOne 模板搭建个人静态博客
+date: 2026-01-15 12:12:12
+tags: 教程
+categories: 博客搭建
+excerpt: "使用EdgeOne Pages **「模板快速搭建」** 场景，无需本地复杂配置框架，直接使用 EdgeOne 官方预制模板，3 分钟完成静态博客部署，支持个性化修改、图片插入、自定义域名等核心需求，适合新手快速上手。"
+cover: /images/0.png
+---               
+
+# EdgeOne Pages 模板搭建个人静态博客
+
+## 一、前期准备
+
+### 1. 基础条件
+
+* 已注册腾讯云账号，不需要实名认证（[注册地](https://cloud.tencent.com/register)[址](https://cloud.tencent.com/register)）
+
+* 准备代码仓库账号（GitHub/Gitee/GitLab 任选，推荐 GitHub）
+
+* 可选：域名（国内访问需备案）
+
+### 2. 环境要求
+
+无需本地安装任何开发工具，仅需浏览器即可完成全部操作。
+
+## 二、核心步骤：模板创建 + 部署
+
+### （一）进入 Pages 模板创建页面
+
+1. 访问 [EdgeOne](https://console.cloud.tencent.com/edgeone/)控制台，登录后选择「网站安全加速」→「Pages 服务」
+
+2. 点击「创建项目」，进入创建方式选择页，点击「从模板开始」
+
+### （二）选择静态博客模板
+
+EdgeOne 提供 10+ 静态博客适配模板，按场景分类如下（推荐优先选择标注「静态博客专用」的模板）：
+
+
+| 模板类型   | 推荐模板                   | 特点          | 适用场景       |
+| ------ | ---------------------- | ----------- | ---------- |
+| 静态博客专用 | Hexo Boilerplate       | 经典轻量，主题丰富   | 个人日记、技术博客  |
+| 静态博客专用 | Astro Starter          | 多框架兼容，加载速度快 | 高性能技术博客    |
+| 文档型博客  | Docusaurus Boilerplate | 支持文档导航、搜索   | 技术知识库、教程博客 |
+| 响应式博客  | Massively（HTML5 UP）    | 自适应布局，视觉效果好 | 设计类、生活类博客  |
+| 简约博客   | Paradigm Shift         | 极简风格，加载速度极快 | 文字为主的个人博客  |
+
+### （三）仓库授权与项目配置
+
+1. 选择代码仓库平台（以 GitHub 为例），点击「授权」
+
+* 登录 GitHub 账号，授予 EdgeOne 仓库访问权限
+
+* 勾选「允许访问所有仓库」或指定新建仓库
+
+2. 填写项目基础信息
+
+* 项目名称：自定义（如「my-personal-blog」）
+
+* 仓库名称：自动同步项目名称（可修改）
+
+* 仓库属性：选择「公开」或「私有」（静态博客推荐公开）
+
+* 加速区域：国内用户选「中国大陆」，海外用户选「全球」
+
+3. 构建参数自动填充（无需手动修改）
+
+   模板会预设对应框架的构建配置（参考下表），直接沿用即可：
+
+
+
+| 模板名称                   | 根目录 | 输出目录   | 构建命令          | 构建依赖命令      |
+| ---------------------- | --- | ------ | ------------- | ----------- |
+| Hexo Boilerplate       | ./  | public | npm run build | npm install |
+| Astro Starter          | ./  | dist   | npm run build | npm install |
+| Docusaurus Boilerplate | ./  | build  | npm run build | npm install |
+
+
+4. 点击「立即创建」，系统自动完成：
+
+* 在你的 GitHub 账号创建你的模板仓库
+
+* 触发 EdgeOne 自动构建部署（耗时 30 秒 - 1 分钟）
+
+### （四）部署成功与预览
+
+1. 部署完成后，页面显示「部署成功」提示
+
+2. 点击系统生成的默认域名（如 `xxx.edgeone.run`），即可预览博客效果
+
+## 三、个性化配置：修改模板内容
+
+### （一）核心配置修改
+
+修改你的 GitHub 账号对应模板仓库里的文件，然后保存
+
+以 Hexo 模板为例（其他模板类似）：
+
+1. 编辑配置文件 `_config.yml`：
+
+* 博客标题：`title: 我的个人博客`
+
+* 作者名称：`author: 张三`
+
+* 描述：`description: 分享技术与生活`
+
+* 语言：`language: zh-CN`
+
+* 主题：`theme: landscape`（可替换为其他 Hexo 主题）
+
+### 例如本博客的 `_config.yml`：
+
+``` bash
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# THEME REDEFINE CONFIGURATION FILE V2
+# BY EVANNOTFOUND
+# GITHUB: https://github.com/EvanNotFound/hexo-theme-redefine
+# DOCUMENTATION: https://redefine-docs.ohevan.com
+# DEMO: https://redefine.ohevan.com
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# BASIC INFORMATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/basic/info
+info:
+  # Site title
+  title: Week's 小栈
+  # Site subtitle
+  subtitle: 听风沐雨
+  # Author name
+  author: Week
+  # Site URL
+  url: https://www.weekyu.dpdns.org
+# BASIC INFORMATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# IMAGE CONFIGURATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/basic/defaults
+defaults:
+  # Favicon
+  favicon: /images/Profile.jpg
+  # Site logo
+  logo: 
+  # Site avatar
+  avatar: /images/Profile.jpg
+# IMAGE CONFIGURATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# COLORS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/basic/colors
+colors:
+  #Primary color
+  primary: "#A31F34"
+  # Secondary color (TBD)
+  secondary:
+  # Default theme mode initial value (will be overwritten by prefer-color-scheme)
+  default_mode: light # light, dark
+# COLORS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# SITE CUSTOMIZATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/basic/global
+global:
+  # Custom global fonts
+  fonts:
+    # Chinese fonts
+    chinese: 
+      enable: false # Whether to enable custom chinese fonts
+      family:  # Font family
+      url:  # Font URL to CSS file
+    # English fonts
+    english: 
+      enable: false # Whether to enable custom english fonts
+      family:  # Font family
+      url:  # Font URL to CSS file
+    # Custom title fonts (navbar, sidebar)
+    title:
+      enable: false # Whether to enable custom title fonts
+      family:  # Font family
+      url:  # Font URL to CSS file
+  # Content max width
+  content_max_width: 1000px
+  # Sidebar width
+  sidebar_width: 210px
+  # Effects on mouse hover
+  hover:
+    shadow: true # shadow effect
+    scale: false # scale effect
+  # Scroll progress
+  scroll_progress:
+    bar: false # progress bar
+    percentage: true # percentage
+  # Website counter
+  website_counter:
+    url: https://cn.vercount.one/js # counter API URL (no need to change)
+    enable: false # enable website counter or not
+    site_pv: false # site page view
+    site_uv: false # site unique visitor
+    post_pv: false # post page view
+  # Whether to enable single page experience (using swup). See https://swup.js.org/. similar to pjax
+  single_page: true
+  # Whether to enable Preloader.
+  preloader:
+    enable: false
+    custom_message: # Custom message. If empty, the site title will be displayed
+  # Side tools settings
+  side_tools:
+    # Whether to enable gear rotation animation for settings button
+    gear_rotation: true
+    # Whether to auto expand tools list on page load
+    auto_expand: false
+  # Whether to enable open graph
+  open_graph:
+    enable: true
+    image: /images/redefine-og.webp  # default og:image
+    description: Hexo Theme Redefine, Redefine Your Hexo Journey.
+  # Google Analytics
+  google_analytics:
+    enable: false # Whether to enable Google Analytics
+    id:  # Google Analytics Measurement ID
+# SITE CUSTOMIZATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+    
+
+# FONTAWESOME >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/basic/fontawesome
+fontawesome: # Pro v6.2.1
+  # Thin version
+  thin: false
+  # Light version
+  light: false
+  # Duotone version
+  duotone: false
+  # Sharp Solid version
+  sharp_solid: false
+# FONTAWESOME <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# HOME BANNER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/home/home_banner
+home_banner:
+  # Whether to enable home banner
+  enable: true
+  # style of home banner
+  style: fixed # static or fixed
+  # Home banner image
+  image: 
+    light: /images/main_bg_ligth.jpg # light mode
+    dark: /images/main_ligth.jpg # dark mode
+  # Home banner title
+  title: Week's Blog
+  # Home banner subtitle
+  subtitle:
+    text: [欢迎来到我的博客。] # subtitle text, array
+    hitokoto:  # 一言配置
+      enable: false # Whether to enable hitokoto
+      show_author: false # Whether to show author
+      api: https://v1.hitokoto.cn # API URL, can add types, see https://developer.hitokoto.cn/sentence/#%E5%8F%A5%E5%AD%90%E7%B1%BB%E5%9E%8B-%E5%8F%82%E6%95%B0
+    typing_speed: 100 # Typing speed (ms)
+    backing_speed: 80 # Backing speed (ms)
+    starting_delay: 500 # Start delay (ms)
+    backing_delay: 1500 # Backing delay (ms)
+    loop: true # Whether to loop
+    smart_backspace: true # Whether to smart backspace
+  # Color of home banner text
+  text_color: 
+    light: "#fff" # light mode
+    dark: "#d1d1b6" # dark mode
+  # Specific style of the text
+  text_style: 
+    # Title font size
+    title_size: 2.8rem
+    # Subtitle font size
+    subtitle_size: 1.5rem
+    # Line height between title and subtitle
+    line_height: 1.2
+  # Home banner custom font
+  custom_font: 
+    # Whether to enable custom font
+    enable: false
+    # Font family
+    family: 
+    # URL to font CSS file
+    url:
+  # Home banner social links
+  social_links:
+    # Whether to enable
+    enable: false
+    # Social links style
+    style: default # default, reverse, center
+    # Social links
+    links:
+      github:  # your GitHub URL
+      instagram: # your Instagram URL
+      zhihu:  # your ZhiHu URL
+      twitter:  # your twitter URL
+      email:  # your email
+      # ...... # you can add more
+    # Social links with QRcode drawers
+    qrs:
+      weixin:  # your Wechat QRcode image URL
+      # ...... # you can add more
+# HOME BANNER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# NAVIGATION BAR >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/home/navbar
+navbar:
+  # Auto hide navbar
+  auto_hide: false
+  # Navbar background color
+  color:
+    left: "#f78736" #left side 
+    right: "#367df7"  #right side
+    transparency: 35 #percent (10-99)
+  # Navbar width (usually no need to modify)
+  width:
+    home: 1200px #home page
+    pages: 1000px #other pages
+  # Navbar links
+  links:
+    Home: 
+      path: / 
+      icon: fa-regular fa-house # can be empty
+    Archives: 
+      path: /archives 
+      icon: fa-regular fa-archive # can be empty
+    # Tags: #取名随意
+    #  icon: fa-solid fa-tags #图标
+    #  path: /tags/ #链接
+    # Categories: #取名随意
+    #  icon: fa-solid fa-folder #图标
+    #  path: /categories/ #链接
+    Photo: #取名随意
+      icon: fa-solid fa-image #图标
+      path: /masonry/ 
+    # Bookmarks: #取名随意
+    #  icon: fa-solid fa-bookmark #图标
+    #  path: /bookmarks/
+    # Status: 
+    #   path: https://status.ohevan.com/
+    #   icon: fa-regular fa-chart-bar
+    About: 
+      path: /about
+      icon: fa-solid fa-circle-info
+    #     Me: /about
+    #     Github: https://github.com/EvanNotFound/hexo-theme-redefine
+    #     Blog: https://ohevan.com
+    #     Friends: /friends
+    Friends: #取名随意
+      icon: fa-solid fa-link #图标
+      path: /links/
+    #   submenus:
+    #     Link1: /link1
+    #     Link2: /link2
+    #     Link3: /link3
+    # ...... # you can add more
+  # Navbar search (local search). Requires hexo-generator-searchdb (npm i hexo-generator-searchdb). See https://github.com/theme-next/hexo-generator-searchdb
+  search:
+    # Whether to enable
+    enable: false
+    # Preload search data when the page loads
+    preload: true
+# NAVIGATION BAR <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# HOME PAGE ARTICLE SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/home/home
+home:
+  # Sidebar settings
+  sidebar:
+    enable: true # Whether to enable sidebar
+    position: left # Sidebar position. left, right
+    first_item: menu # First item in sidebar. menu, info
+    announcement: # Announcement text
+    show_on_mobile: true # Whether to show sidebar navigation on mobile sheet menu
+    links:
+       Archives: 
+         path: /archives 
+         icon: fa-regular fa-archive # can be empty
+       Tags: 
+         path: /tags 
+         icon: fa-regular fa-tags # can be empty
+       Categories: 
+         path: /categories 
+         icon: fa-regular fa-folder # can be empty
+      # ...... # you can add more
+  # Article date format
+  article_date_format: auto # auto, relative, YYYY-MM-DD, YYYY-MM-DD HH:mm:ss etc.
+  # Article excerpt length
+  excerpt_length: 200 # Max length of article excerpt
+  # Article categories visibility
+  categories:
+    enable: true  # Whether to enable
+    limit: 3 # Max number of categories to display
+  # Article tags visibility
+  tags:
+    enable: true  # Whether to enable
+    limit: 3  # Max number of tags to display
+# HOME PAGE ARTICLE SETTINGS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# ARTICLE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/posts/articles
+articles:
+  # Set the styles of the article
+  style:
+    font_size: 16px # Font size
+    line_height: 1.5 # Line height
+    image_border_radius: 14px # image border radius
+    image_alignment: center # image alignment. left, center
+    image_caption: false # Whether to display image caption
+    link_icon: true # Whether to display link icon
+    delete_mask: false # Add mask effect to <del> tags, hiding content by default and revealing on hover
+    title_alignment: left # Title alignment. left, center
+    headings_top_spacing: # Top spacing for headings from h1-h6
+      h1: 3.2rem
+      h2: 2.4rem
+      h3: 1.9rem
+      h4: 1.6rem
+      h5: 1.4rem
+      h6: 1.3rem
+  # Word count. Requires hexo-wordcount (npm install hexo-wordcount). See https://github.com/willin/hexo-wordcount
+  word_count:
+    enable: true # Whether to enable
+    count: true # Whether to display word count
+    min2read: true # Whether to display reading time
+  # Author label
+  author_label: 
+    enable: true # Whether to enable
+    auto: false # Whether to automatically add author label, e.g. Lv1, Lv2, Lv3...
+    list: []
+  # Code block settings
+  code_block:
+    copy: true # Whether to enable code block copy button
+    style: mac # mac | simple
+    highlight_theme: # Color scheme for highlightjs code highlighting. For preview, see https://highlightjs.org/examples
+      light: github # light mode theme, support: github, atom-one-light, default
+      dark: vs2015 # dark mode theme, support: github-dark, monokai-sublime, vs2015, night-owl, atom-one-dark, nord, tokyo-night-dark, a11y-dark, agate
+    font: # Custom font
+      enable: false # Whether to enable
+      family: # Font family
+      url: # Font URL to CSS file
+  # Table of contents settings
+  toc:
+    enable: true # Whether to enable TOC
+    max_depth: 3 # TOC depth
+    number: false # Whether to add number to TOC automatically
+    expand: true # Whether to expand TOC
+    init_open: true # Open toc by default
+  # Whether to enable copyright notice
+  copyright:
+    enable: true # Whether to enable
+    default: cc_by_nc_sa # Default license, can be cc_by_nc_sa, cc_by_nd, cc_by_nc, cc_by_sa, cc_by, all_rights_reserved, public_domain
+  # Whether to enable lazyload for images
+  lazyload: true
+  # Pangu.js (automatically add space between Chinese and English). See https://github.com/vinta/pangu.js
+  pangu_js: false
+  # Article recommendation. Requires nodejieba (npm install nodejieba). Transplanted from hexo-theme-volantis.
+  recommendation:
+    # Whether to enable article recommendation
+    enable: false
+    # Article recommendation title
+    title: 推荐阅读
+    # Max number of articles to display
+    limit: 3
+    # Max number of articles to display mobile
+    mobile_limit: 2
+    # Placeholder image
+    placeholder: /images/wallhaven-wqery6-light.webp
+    # Skip directory
+    skip_dirs: []
+# ARTICLE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# COMMENT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/posts/comment
+comment:
+  # Whether to enable comment
+  enable: true
+  # Comment system
+  system: waline # waline, gitalk, twikoo, giscus
+  # System configuration
+  config:
+    # Waline comment system. See https://waline.js.org/
+    waline:
+      serverUrl: https://example.example.com # Waline server URL. e.g. https://example.example.com
+      lang: zh-CN # Waline language. e.g. zh-CN, en-US. See https://waline.js.org/guide/client/i18n.html
+      emoji: [] # Waline emojis, see https://waline.js.org/guide/features/emoji.html
+      recaptchaV3Key: # Google reCAPTCHA v3 key. See https://waline.js.org/reference/client/props.html#recaptchav3key
+      turnstileKey: # Turnstile key. See https://waline.js.org/reference/client/props.html#turnstilekey
+      reaction: false # Waline reaction. See https://waline.js.org/reference/client/props.html#reaction
+    # Gitalk comment system. See https://github.com/gitalk/gitalk
+    gitalk:
+      clientID: # GitHub Application Client ID
+      clientSecret: # GitHub Application Client Secret
+      repo: # GitHub repository
+      owner: # GitHub repository owner
+      proxy: # GitHub repository proxy
+    # Twikoo comment system. See https://twikoo.js.org/
+    twikoo:
+      version: 1.6.10 # Twikoo version, do not modify if you dont know what it is
+      server_url: # Twikoo server URL. e.g. https://example.example.com
+      region: # Twikoo region. can be empty
+    # Giscus comment system. See https://giscus.app/
+    giscus:
+      repo: # Github repository name e.g. EvanNotFound/hexo-theme-redefine
+      repo_id: # Github repository id
+      category: # Github discussion category
+      category_id: # Github discussion category id
+      mapping: pathname # Which value to use as the unique identifier for the page. e.g. pathname, url, title, og:title. DO NOT USE og:title WITH PJAX ENABLED since pjax will not update og:title when the page changes
+      strict: 0 # Whether to enable strict mode. e.g. 0, 1
+      reactions_enabled: 1 # Whether to enable reactions. e.g. 0, 1
+      emit_metadata: 0 # Whether to emit metadata. e.g. 0, 1
+      lang: en # Giscus language. e.g. en, zh-CN, zh-TW
+      input_position: bottom # Place the comment box above/below the comments. e.g. top, bottom
+      loading: lazy # Load the comments lazily
+# COMMENT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# FOOTER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/footer
+footer:
+  # Show website running time
+  runtime: true # show website running time or not
+  # Icon in footer, write fontawesome icon code here
+  icon: '<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>'
+  # The start time of the website, format: YYYY/MM/DD HH:mm:ss
+  start: 2026/1/15 11:45:14
+  # Site statistics
+  statistics: true # show site statistics or not (total articles, total words)
+  # Footer message
+  customize:
+  # ICP record number. See https://beian.miit.gov.cn/
+  icp:
+    enable: false # Whether to enable
+    number: # ICP record number
+    url: # ICP record url
+# FOOTER <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# INJECT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/inject
+inject:
+  # Whether to enable inject
+  enable: false
+  # Inject custom head html code
+  head: 
+    -
+    -
+  # Inject custom footer html code
+  footer:
+    -
+    -
+# INJECT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# PLUGINS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/plugins
+plugins:
+  # RSS feed. Requires hexo-generator-feed (npm i hexo-generator-feed). See https://github.com/hexojs/hexo-generator-feed
+  feed:
+    enable: true # Whether to enable
+  # Aplayer. See https://github.com/DIYgod/APlayer
+  aplayer:
+    enable: true # Whether to enable
+    type: fixed # fixed, mini
+    audios:
+      - name: Imagine # audio name
+        artist: John Lennon # audio artist
+        url: https://evan.beee.top/music/Imagine%20-%20John%20Lennon.mp3 # audio url
+        cover: https://evan.beee.top/music/covers/Lennon_Imagine_Sleeve_1975.jpg # audio cover
+      - name: Something Just Like This
+        artist: Coldplay
+        url: https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3
+        cover: https://evan.beee.top/music/covers/Something_Just_Like_This.png
+      # .... you can add more audios here
+  # Mermaid JS. Requires hexo-filter-mermaid-diagrams (npm i hexo-filter-mermaid-diagrams). See https://mermaid.js.org/
+  mermaid:
+    enable: false # enable mermaid or not
+    version: "11.4.1" # default v11.4.1
+# PLUGINS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# PAGE TEMPLATES >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/page_templates
+page_templates:
+  # Friend Links page column number
+  friends_column: 3
+  # Tags page style
+  tags_style: blur # blur, cloud
+# PAGE TEMPLATES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# CDN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/cdn
+cdn:
+  # Whether to enable CDN
+  enable: false
+  # CDN Provider
+  provider: npmmirror # npmmirror, zstatic, cdnjs, jsdelivr, unpkg, custom
+  # Custom CDN URL
+  # format example: https://cdn.custom.com/hexo-theme-redefine/${version}/source/${path}
+  # The ${path} must leads to the root of the "source" folder of the theme
+  custom_url: 
+# CDN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+# DEVELOPER MODE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/developer
+developer:
+  # Whether to enable developer mode (only for developers who want to modify the theme source code, not for ordinary users)
+  enable: false
+# DEVELOPER MODE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+
+  
+# PLUGINS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# PAGE TEMPLATES 页面模版 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/page_templates
+page_templates:
+  # Friend Links page column number
+  friends_column: 2
+  # Tags page style
+  tags_style: blur # blur, cloud
+# PAGE TEMPLATES <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
+# CDN CDN 加速 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/cdn
+cdn:
+  # Whether to enable CDN
+  enable: false
+  # CDN Provider
+  provider: aliyun # npmmirror, zstatic, sustech, cdnjs, jsdelivr, unpkg, custom
+  # Custom CDN URL
+  # format example: https://cdn.custom.com/hexo-theme-redefine/${version}/source/${path}
+  # The ${path} must leads to the root of the "source" folder of the theme
+  custom_url: 
+# CDN <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+# DEVELOPER MODE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# Docs: https://redefine-docs.ohevan.com/developer
+developer:
+  # Whether to enable developer mode (only for developers who want to modify the theme source code, not for ordinary users)
+  enable: false
+# DEVELOPER MODE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+```
+2. EdgeOne 会自动触发重新部署（无需手动操作），5 分钟后生效。
+
+### （二）添加新博客文章
+
+以 Hexo 模板为例，新建文章：
+
+ 打开Github对应仓库在 `source/_posts/` 目录下新建 Markdown 文件，编辑内容后保存即可。
+
