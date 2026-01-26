@@ -1,5 +1,5 @@
 ---
-title: 本地搭建Hexo博客部署到GITHUB
+title: 本地搭建Hexo博客部署到GitHub
 date: 2026-01-26 12:12:12
 tags: 教程
 categories: 博客搭建
