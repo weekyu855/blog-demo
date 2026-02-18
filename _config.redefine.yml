@@ -429,6 +429,9 @@ footer:
 # Docs: https://redefine-docs.ohevan.com/inject
 inject:
   # Whether to enable inject
+  head:
+  bottom:
+    - <script src="/js/snowflake.js"></script> 
   enable: false
   # Inject custom head html code
   head: 
