@@ -437,7 +437,7 @@ inject:
   # Inject custom footer html code
   footer:
     - <script src="/js/snowflake.js"></script>
-    - <script defer src="https://uuuuu.cf/js/fishes.js"></script> # 页脚养鱼(彩色)
+    -
 # INJECT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
 
