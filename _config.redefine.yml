@@ -432,11 +432,11 @@ inject:
   enable: false
   # Inject custom head html code
   head:
-  bottom:
-    - <script src="/js/snowflake.js"></script> 
+    -
+    -
   # Inject custom footer html code
   footer:
-    -
+    - <script src="/js/snowflake.js"></script>
     -
 # INJECT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
