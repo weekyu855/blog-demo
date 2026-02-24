@@ -131,6 +131,7 @@ hexo new "这是一篇新的博文"
 hexo clean && hexo s
 ```
 访问 http://localhost:4000/ 预览修改效果。
+停止本地服务：终端按Ctrl+C即可。
 ### 发布更新
 确认无误后，执行部署命令推送到 GitHub：
 ```bash
