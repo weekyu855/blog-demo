@@ -4,7 +4,7 @@ date: 2026-01-15 12:12:12
 tags: 软件
 categories: OpenList
 excerpt: "OpenList是一个网盘聚合工具，搭配网盘挂载利器RaiDrive，立刻把阿里云盘、百度网盘、夸克网盘……全都当成本地硬盘用！"
-cover: false
+cover:
 ---
                                                  
 # OpenList 网盘本地挂载完全教程
