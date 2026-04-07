@@ -436,7 +436,7 @@ inject:
     -
   # Inject custom footer html code
   footer:
-    -
+    - /js/snow.js
     -
 # INJECT <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
