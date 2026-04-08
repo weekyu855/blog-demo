@@ -4,7 +4,6 @@ date: 2026-01-26 12:12:12
 tags: 教程
 categories: 博客搭建
 excerpt: "使用Hexo框架搭建一个个人博客，并将其部署到GitHub Pages和Cloudflare Pages上"
-cover:
 ---
 # 本地搭建Hexo博客部署到GITHUB
 本文详细介绍了如何使用Hexo框架搭建一个个人博客，并将其部署到GitHub Pages和Cloudflare Pages上。主要内容包括环境准备、Git配置、Hexo初始化、以及部署流程。

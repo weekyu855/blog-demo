@@ -4,7 +4,6 @@ date: 2026-01-26 12:12:12
 tags: 教程
 categories: 博客搭建
 excerpt: "Hexo + Redefine 主题安装配置教程。"
-cover: /images/2.png
 ---
 # 用Redefing主题美化Hexo博客
 >  Hexo + Redefine 主题安装配置教程。
