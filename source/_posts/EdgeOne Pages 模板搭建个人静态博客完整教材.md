@@ -4,6 +4,7 @@ date: 2026-01-15 12:12:12
 tags: 教程
 categories: 博客搭建
 excerpt: "使用EdgeOne Pages **「模板快速搭建」** 场景，无需本地复杂配置框架，直接使用 EdgeOne 官方预制模板，3 分钟完成静态博客部署，支持个性化修改、图片插入、自定义域名等核心需求，适合新手快速上手。"
+cover: /images/0.png
 ---               
 
 # EdgeOne Pages 模板搭建个人静态博客
