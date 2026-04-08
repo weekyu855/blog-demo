@@ -3,7 +3,7 @@ title: 【2026必备】VMware永久免费 | 保姆级手把手装Windows 11虚�
 date: 2026-04-08 13:00:00
 tags: 教程
 categories: 软件教程
-excerpt: "2026年最新方案，使用永久免费的VMware Workstation Player，从零开始保姆级手把手教你安装Windows 11虚拟机，避开BIOS、Hyper-V和内存完整性等常见"深坑"，让小白也能一次成功。"
+excerpt: "2026年最新方案，使用永久免费的VMware Workstation Player，从零开始保姆级手把手教你安装Windows 11虚拟机，避开BIOS、Hyper-V和内存完整性等常见「深坑」，让小白也能一次成功。"
 cover: /images/0.png
 ---
 
