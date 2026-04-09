@@ -14,7 +14,7 @@ keywords:
   - Windows 11 虚拟机安装教程
   - 保姆级虚拟机安装
 description: 小in分享最新教程，带你从零开始在电脑中打造安全隔离空间，手把手教你避开BIOS、Hyper-V和内存完整性等常见"深坑"，让虚拟机性能发挥到极致，小白也能一次成功！
-cover: https://i0.hdslb.com/bfs/archive/xxx.jpg  # 这里替换为视频封面图URL，实际可以从B站获取
+cover: 
 ---
 
 # 【2026必备】VMware永久免费 | 保姆级手把手装Windows 11虚拟机，小白一次成功！
