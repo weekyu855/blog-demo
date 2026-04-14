@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    <meta name="author" content="Week">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2026/01/15/openlist 网盘本地挂载/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenList 网盘本地挂载完全教程">
+<meta property="og:url" content="http://example.com/2026/01/15/OpenList%20%E7%BD%91%E7%9B%98%E6%9C%AC%E5%9C%B0%E6%8C%82%E8%BD%BD/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-01-15T04:12:12.000Z">
+<meta property="article:modified_time" content="2026-04-08T05:33:09.793Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/Profile.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/Profile.jpg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/Profile.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            OpenList 网盘本地挂载完全教程 | Week&#39;s 小栈
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+    
+            
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"zh-CN"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":false,"site_pv":false,"site_uv":false,"post_pv":false},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/main_bg_ligth.jpg","dark":"/images/main_ligth.jpg"},"title":"Week's Blog","subtitle":{"text":["欢迎来到我的博客。"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":{"github":null,"instagram":null,"zhihu":null,"twitter":null,"email":null},"qrs":{"weixin":null}}},"plugins":{"feed":{"enable":true},"aplayer":{"enable":true,"type":"fixed","audios":[{"name":"Imagine","artist":"John Lennon","url":"https://evan.beee.top/music/Imagine%20-%20John%20Lennon.mp3","cover":"https://evan.beee.top/music/covers/Lennon_Imagine_Sleeve_1975.jpg","lrc":null},{"name":"Something Just Like This","artist":"Coldplay","url":"https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3","cover":"https://evan.beee.top/music/covers/Something_Just_Like_This.png"}]},"mermaid":{"enable":false,"version":"11.4.1"}},"version":"2.8.5","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Photo":{"icon":"fa-solid fa-image","path":"/masonry/"},"About":{"path":"/about","icon":"fa-solid fa-circle-info"},"Friends":{"icon":"fa-solid fa-link","path":"/links/"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":3,"tags_style":"blur"},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":{"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Tags":{"path":"/tags","icon":"fa-regular fa-tags"},"Categories":{"path":"/categories","icon":"fa-regular fa-folder"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footerStart":"2026/1/15 11:45:14"};
+    window.lang_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                
+                Week&#39;s 小栈
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    首页
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    归档
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/masonry/"
+                                        >
+                                    <i class="fa-solid fa-image fa-fw"></i>
+                                    相册
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/about"
+                                        >
+                                    <i class="fa-solid fa-circle-info fa-fw"></i>
+                                    关于
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/links/"
+                                        >
+                                    <i class="fa-solid fa-link fa-fw"></i>
+                                    常用
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                首页
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                归档
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/masonry/"
+                        >
+                            <span>
+                                相册
+                            </span>
+                            
+                                <i class="fa-solid fa-image fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/about"
+                        >
+                            <span>
+                                关于
+                            </span>
+                            
+                                <i class="fa-solid fa-circle-info fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/links/"
+                        >
+                            <span>
+                                常用
+                            </span>
+                            
+                                <i class="fa-solid fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/tags"
+                        >
+                            <span>Tags</span>
+                            <i class="fa-regular fa-tags fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>Categories</span>
+                            <i class="fa-regular fa-folder fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">15</div>
+        <div class="label text-third-text-color text-sm">标签</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">3</div>
+        <div class="label text-third-text-color text-sm">分类</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">文章</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">OpenList 网盘本地挂载完全教程</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] flex-shrink-0 rounded-medium border border-border-color p-[1px]">
+				<img src="/images/Profile.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Week</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-01-15 12:12:12</span>
+        <span class="mobile">2026-01-15 12:12:12</span>
+        <span class="hover-info">创建</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-04-08 13:33:09</span>
+            <span class="mobile">2026-04-08 13:33:09</span>
+            <span class="hover-info">更新</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/OpenList/">OpenList</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%BD%AF%E4%BB%B6/">软件</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fa-regular fa-typewriter"></i>&nbsp;<span>1.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fa-regular fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h1 id="OpenList-网盘本地挂载完全教程"><a href="#OpenList-网盘本地挂载完全教程" class="headerlink" title="OpenList 网盘本地挂载完全教程"></a>OpenList 网盘本地挂载完全教程</h1><h3 id="一、前期准备"><a href="#一、前期准备" class="headerlink" title="一、前期准备"></a>一、前期准备</h3><ol>
+<li><strong>必备工具</strong></li>
+</ol>
+<ul>
+<li><p>操作系统：Windows 10+</p>
+</li>
+<li><p>依赖工具：RaiDrive（本地挂载工具）、Docker（可选，推荐部署方式）</p>
+</li>
+<li><p>网盘账号：123 云盘 &#x2F; 迅雷云盘 &#x2F; 阿里云盘等（支持 40 + 存储类型）</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>软件获取</strong></li>
+</ol>
+<ul>
+<li><p>OpenList 官方地址：<a class="link"   target="_blank" rel="noopener" href="https://github.com/OpenListTeam/OpenList" >Github仓库<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></p>
+</li>
+<li><p><strong>RaiDrive 下载</strong>：<a class="link"   target="_blank" rel="noopener" href="https://www.raidrive.com/" >官方最新版<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>（支持 32&#x2F;64 位 Windows，无需破解）</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>视频教程</strong></li>
+</ol>
+<ul>
+<li>bilibili：<a class="link"   target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1crucz2EPU/?share_source=copy_web&vd_source=db10c9ae8f1e2356b533421b72b176d8" >视频教程<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a></li>
+</ul>
+<h3 id="二、OpenList-安装部署"><a href="#二、OpenList-安装部署" class="headerlink" title="二、OpenList 安装部署"></a>二、OpenList 安装部署</h3><ol>
+<li><p>下载 OpenList Windows 客户端，双击安装</p>
+</li>
+<li><p>打开软件后依次安装三大组件：</p>
+</li>
+</ol>
+<ul>
+<li>「Openlist 服务」→「RClone」→「Openlist 核心」（缺一不可）</li>
+</ul>
+<ol start="3">
+<li>基础配置：</li>
+</ol>
+<ul>
+<li><p>进入【设置】：默认端口 5244（可自定义），点击「放行端口」</p>
+</li>
+<li><p>开启「开机自启」，修改并牢记「管理密码」（后续登录用）</p>
+</li>
+<li><p>【应用程序】中开启「开机启动」和「链接处理」</p>
+</li>
+</ul>
+<ol start="4">
+<li>访问管理后台：</li>
+</ol>
+<ul>
+<li><p>浏览器打开 <code>http://localhost:5244</code></p>
+</li>
+<li><p>默认账号：<code>admin</code>，密码：刚才设置的管理密码</p>
+</li>
+</ul>
+<h3 id="三、添加主流网盘（详细配置）"><a href="#三、添加主流网盘（详细配置）" class="headerlink" title="三、添加主流网盘（详细配置）"></a>三、添加主流网盘（详细配置）</h3><h4 id="🔹-123-云盘（5-步速成）"><a href="#🔹-123-云盘（5-步速成）" class="headerlink" title="🔹 123 云盘（5 步速成）"></a>🔹 123 云盘（5 步速成）</h4><ol>
+<li><p>管理后台左侧→【存储】→【添加】</p>
+</li>
+<li><p>驱动选择「123 云盘」</p>
+</li>
+<li><p>挂载路径：<code>/123</code>（自定义，必须加 <code>/</code>）</p>
+</li>
+<li><p>填写 123 云盘账号（手机号）和密码</p>
+</li>
+<li><p>点击【保存】，验证访问：<code>http://localhost:5244/123</code></p>
+</li>
+</ol>
+<h4 id="🔹-阿里云盘（获取-Refresh-Token）"><a href="#🔹-阿里云盘（获取-Refresh-Token）" class="headerlink" title="🔹 阿里云盘（获取 Refresh Token）"></a>🔹 阿里云盘（获取 Refresh Token）</h4><ol>
+<li>获取 Token（二选一）：</li>
+</ol>
+<ul>
+<li><p>方法 1（推荐）：访问<a class="link"   target="_blank" rel="noopener" href="https://api.oplist.org/" >Open<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><a class="link"   target="_blank" rel="noopener" href="https://api.oplist.org/" >List<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><a class="link"   target="_blank" rel="noopener" href="https://api.oplist.org/" > 官方工具<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>→扫码授权→复制 <code>refresh_token</code></p>
+</li>
+<li><p>方法 2：网页版登录→F12→Application→Local Storage→<code>token</code> 字段中提取 <code>refresh_token</code></p>
+</li>
+</ul>
+<ol start="2">
+<li><p>【存储】→【添加】，驱动选择「阿里云盘 Open」</p>
+</li>
+<li><p>挂载路径：<code>/aliyun</code>，粘贴 <code>refresh_token</code></p>
+</li>
+<li><p>根文件夹 ID 留空（使用根目录）→【保存】</p>
+</li>
+</ol>
+<h3 id="四、本地磁盘挂载（RaiDrive-专属配置）"><a href="#四、本地磁盘挂载（RaiDrive-专属配置）" class="headerlink" title="四、本地磁盘挂载（RaiDrive 专属配置）"></a>四、本地磁盘挂载（RaiDrive 专属配置）</h3><h4 id="🔧-第一步：安装-RaiDrive"><a href="#🔧-第一步：安装-RaiDrive" class="headerlink" title="🔧 第一步：安装 RaiDrive"></a>🔧 第一步：安装 RaiDrive</h4><ol>
+<li><p>双击下载的 RaiDrive 安装包，勾选「同意协议」→【下一步】</p>
+</li>
+<li><p>安装路径默认即可（建议保留 C 盘默认路径，避免权限问题）</p>
+</li>
+<li><p>勾选「创建桌面快捷方式」→【安装】→【完成】（自动启动 RaiDrive）</p>
+</li>
+</ol>
+<h4 id="🔧-第二步：配置-WebDAV-连接（核心步骤）"><a href="#🔧-第二步：配置-WebDAV-连接（核心步骤）" class="headerlink" title="🔧 第二步：配置 WebDAV 连接（核心步骤）"></a>🔧 第二步：配置 WebDAV 连接（核心步骤）</h4><ol>
+<li><p>打开 RaiDrive，点击左上角「+」号添加连接</p>
+</li>
+<li><p>基础配置（必选参数）：</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>操作步骤</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储类型</td>
+<td>选择「NAS」→ 子类型选择「WebDAV」（关键！不要选错）</td>
+</tr>
+<tr>
+<td>名称</td>
+<td>自定义（如「OpenList 网盘」，便于识别）</td>
+</tr>
+<tr>
+<td>地址</td>
+<td>填写 <code>localhost:5244</code>（本地部署）或 <code>服务器IP:5244</code>（Linux 服务器部署）</td>
+</tr>
+<tr>
+<td>路径</td>
+<td>必须填写 <code>/dav</code>（OpenList WebDAV 固定路径，少写报错）</td>
+</tr>
+<tr>
+<td>用户名</td>
+<td>输入 OpenList 管理账号（默认 <code>admin</code>）</td>
+</tr>
+<tr>
+<td>密码</td>
+<td>输入 OpenList 管理密码（不是网盘密码！）</td>
+</tr>
+<tr>
+<td>挂载点</td>
+<td>选择未被占用的盘符（如 G:、H:，下拉选择即可）</td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>高级配置（可选优化）：</li>
+</ol>
+<ul>
+<li><p>勾选「开机自动连接」（避免重启后重新配置）</p>
+</li>
+<li><p>TLS&#x2F;SSL：默认「关闭」（本地部署无需加密，远程访问可开启）</p>
+</li>
+<li><p>点击【高级】→ 缓存大小：默认 100MB，可改为 500MB 提升访问速度</p>
+</li>
+</ul>
+<ol start="4">
+<li>测试连接：点击右下角【连接】，显示「已连接」即配置成功</li>
+</ol>
+<h4 id="🔧-第三步：验证挂载效果"><a href="#🔧-第三步：验证挂载效果" class="headerlink" title="🔧 第三步：验证挂载效果"></a>🔧 第三步：验证挂载效果</h4><ol>
+<li><p>打开「此电脑」，即可看到新增的网络磁盘（如 G: 盘，名称为刚才自定义的「OpenList 网盘」）</p>
+</li>
+<li><p>双击进入后，可直接查看所有已添加的网盘（如 &#x2F; 123、&#x2F;XL、&#x2F;aliyun 目录）</p>
+</li>
+<li><p>测试操作：复制 &#x2F; 粘贴本地文件到该磁盘，或直接打开网盘中的视频 &#x2F; 文档（与本地磁盘操作一致）</p>
+</li>
+</ol>
+<h3 id="五、常见问题排查（新增-RaiDrive-专属故障）"><a href="#五、常见问题排查（新增-RaiDrive-专属故障）" class="headerlink" title="五、常见问题排查（新增 RaiDrive 专属故障）"></a>五、常见问题排查（新增 RaiDrive 专属故障）</h3><ol>
+<li><strong>端口无法访问</strong></li>
+</ol>
+<ul>
+<li><p>Windows：关闭防火墙或放行 5244 端口</p>
+</li>
+<li><p>Linux：<code>sudo ufw allow 5244</code>（Ubuntu）&#x2F; <code>firewall-cmd --add-port=5244/tcp</code>（CentOS）</p>
+</li>
+</ul>
+<ol start="2">
+<li><strong>天翼云盘不能复制</strong></li>
+</ol>
+<ul>
+<li><p>在Openlist管理存储——天翼云盘编辑——将WeDav策略由“302重定向”改为“本地代理”</p>
+</li>
+<li><p>重新执行验证步骤，确保手机号验证码正确</p>
+</li>
+</ul>
+<ol start="3">
+<li><strong>RaiDrive 挂载后目录为空 &#x2F; 无法访问</strong></li>
+</ol>
+<ul>
+<li><p>核对路径：必须填写 <code>/dav</code>，而非 <code>/</code> 或其他路径</p>
+</li>
+<li><p>清除缓存：关闭 RaiDrive→打开安装目录→删除「Cache」文件夹→重新连接</p>
+</li>
+<li><p>更新版本：卸载旧版 RaiDrive，从官网下载最新版（避免兼容性问题）</p>
+</li>
+<li><p>验证 WebDAV 接口：浏览器访问 <code>http://localhost:5244/dav</code>，能弹出登录框即正常</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>RaiDrive 提示「连接失败：认证错误」</strong></li>
+</ol>
+<ul>
+<li><p>确认用户名是 <code>admin</code>（不是网盘账号）</p>
+</li>
+<li><p>密码是 OpenList 管理密码（不是网盘密码）</p>
+</li>
+<li><p>重新登录 OpenList 后台，确认密码未修改</p>
+</li>
+</ul>
+<ol start="5">
+<li><strong>忘记管理密码</strong></li>
+</ol>
+<ul>
+<li><p>Windows：重新安装 OpenList 并重新配置</p>
+</li>
+<li><p>Linux：删除容器 <code>docker rm -f openlist</code> 后重新部署</p>
+</li>
+</ul>
+<h3 id="六、核心优势总结"><a href="#六、核心优势总结" class="headerlink" title="六、核心优势总结"></a>六、核心优势总结</h3><p>✅ 开源纯净：原 Alist 核心团队打造，无商业捆绑</p>
+<p>✅ 多盘整合：支持 123 云盘 &#x2F; 迅雷 &#x2F; 阿里云盘等 40 + 存储</p>
+<p>✅ 无缝迁移：可导入 Alist 备份数据</p>
+<p>✅ 本地操作：通过 RaiDrive 实现磁盘级挂载，文件操作零门槛</p>
+<p>✅ 稳定兼容：RaiDrive 支持断点续传、缓存优化，适配 Windows 全版本</p>
+<p>✅ 离线下载：支持 BT &#x2F; 种子直接下载到网盘（需搭配 qBittorrent）</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>标题:</strong> OpenList 网盘本地挂载完全教程</li>
+        <li><strong>作者:</strong> Week</li>
+        <li><strong>创建于
+                :</strong> 2026-01-15 12:12:12</li>
+        
+            <li>
+                <strong>更新于
+                    :</strong> 2026-04-08 13:33:09
+            </li>
+        
+        <li>
+            <strong>链接:</strong> https://www.weekyu.dpdns.org/2026/01/15/OpenList 网盘本地挂载/
+        </li>
+        <li>
+            <strong>
+                版权声明:
+            </strong>
+            
+
+            
+                本文章采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a> 进行许可。
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/%E8%BD%AF%E4%BB%B6/">#软件</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2026/01/15/EdgeOne%20Pages%20%E6%A8%A1%E6%9D%BF%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2%E5%AE%8C%E6%95%B4%E6%95%99%E6%9D%90/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">EdgeOne 模板搭建个人静态博客</span>
+						<span class="post-nav-item">上一篇</span>
+					</span>
+				</a>
+			</div>
+			
+			
+		</div>
+		
+
+
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">目录</div>
+		<div class="page-title">OpenList 网盘本地挂载完全教程</div>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenList-%E7%BD%91%E7%9B%98%E6%9C%AC%E5%9C%B0%E6%8C%82%E8%BD%BD%E5%AE%8C%E5%85%A8%E6%95%99%E7%A8%8B"><span class="nav-text">OpenList 网盘本地挂载完全教程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87"><span class="nav-text">一、前期准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81OpenList-%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="nav-text">二、OpenList 安装部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%B7%BB%E5%8A%A0%E4%B8%BB%E6%B5%81%E7%BD%91%E7%9B%98%EF%BC%88%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="nav-text">三、添加主流网盘（详细配置）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9C%AC%E5%9C%B0%E7%A3%81%E7%9B%98%E6%8C%82%E8%BD%BD%EF%BC%88RaiDrive-%E4%B8%93%E5%B1%9E%E9%85%8D%E7%BD%AE%EF%BC%89"><span class="nav-text">四、本地磁盘挂载（RaiDrive 专属配置）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%EF%BC%88%E6%96%B0%E5%A2%9E-RaiDrive-%E4%B8%93%E5%B1%9E%E6%95%85%E9%9A%9C%EF%BC%89"><span class="nav-text">五、常见问题排查（新增 RaiDrive 专属故障）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF%E6%80%BB%E7%BB%93"><span class="nav-text">六、核心优势总结</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2026</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Week</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        共撰写了 6 篇文章
+                    </span>
+                    
+                        <span>
+                            共 19.6k 字
+                        </span>
+                    
+                </p>
+            
+        </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+        </div>
+        
+        
+            <div>
+                博客已运行 <span class="odometer" id="runtime_days" ></span> 天 <span class="odometer" id="runtime_hours"></span> 小时 <span class="odometer" id="runtime_minutes"></span> 分钟 <span class="odometer" id="runtime_seconds"></span> 秒
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+        
+                
+        
+        
+    </div>  
+</footer>
+
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container">
+	<img src="">
+</div>
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    const swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+</script>
+
+
+
+
+	
+<script src="/js/build/tools/imageViewer.js" type="module"></script>
+
+<script src="/js/build/utils.js" type="module"></script>
+
+<script src="/js/build/main.js" type="module"></script>
+
+<script src="/js/build/layouts/navbarShrink.js" type="module"></script>
+
+<script src="/js/build/tools/scrollTopBottom.js" type="module"></script>
+
+<script src="/js/build/tools/lightDarkSwitch.js" type="module"></script>
+
+<script src="/js/build/layouts/categoryList.js" type="module"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/codeBlock.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/layouts/lazyload.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/tools/runtime.js"></script>
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+  
+<script src="/js/build/plugins/typed.js" type="module"></script>
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js"></script>
+
+    
+<script src="/js/build/plugins/masonry.js" type="module"></script>
+
+
+
+
+    
+<script src="/js/build/libs/anime.min.js"></script>
+
+
+
+
+
+    
+<script src="/js/build/tools/tocToggle.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/layouts/toc.js" type="module" data-swup-reload-script=""></script>
+
+<script src="/js/build/plugins/tabs.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+<script src="/js/build/layouts/essays.js" type="module" data-swup-reload-script=""></script>
+
+
+
+
+
+    
+<script src="/js/build/layouts/bookmarkNav.js" type="module"></script>
+
+
+	
+	<div id="aplayer"></div>
+
+<script src="/js/build/libs/APlayer.min.js"></script>
+
+
+<script src="/js/build/plugins/aplayer.js"></script>
+
+
+	
+    
+    <script src="/js/maple-leaf.js"></script>
+    
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/kesyoban.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body>
+
+</html>
