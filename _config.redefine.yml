@@ -499,5 +499,5 @@ developer:
 # DEVELOPER MODE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
 # 枫叶飘落效果
-maple_leaf:
-  enable: true
+maple_leaf: 
+  enable: false
