@@ -475,7 +475,8 @@ plugins:
         url: https://m801.music.126.net/20260806115059/05891ecdee681b0f01524ba0c60d1aba/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/284818   
       62426/dd0b/d1bc/fa7e/d143327bfce9aa2eef3867ac7aa53b94.mp3                                                                    
         cover: https://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg?param=300y300
-      # .... you can add more audios here
+      
+# .... you can add more audios here
   # Mermaid JS. Requires hexo-filter-mermaid-diagrams (npm i hexo-filter-mermaid-diagrams). See https://mermaid.js.org/
   mermaid:
     enable: false # enable mermaid or not
