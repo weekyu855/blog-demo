@@ -500,4 +500,4 @@ developer:
 
 # 枫叶飘落效果
 maple_leaf: 
-  enable: false
+  enable: true
