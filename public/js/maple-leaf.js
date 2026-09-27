@@ -5,26 +5,25 @@
   if (window.__mapleFallInitialized) return;
   window.__mapleFallInitialized = true;
 
-  // 尊重系统减少动态效果设置
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
 
   const CONFIG = {
-    interval: 700,       // 生成间隔，毫秒
-    maxLeaves: 20,       // 同屏最大叶片数量
-    minSize: 24,         // 最小叶片尺寸，px
-    maxSize: 48,         // 最大叶片尺寸，px
-    minDuration: 9,      // 最短飘落时间，秒
-    maxDuration: 17,     // 最长飘落时间，秒
-    sway: 65,            // 左右摆动幅度
+    interval: 750,
+    maxLeaves: 20,
+    minSize: 26,
+    maxSize: 48,
+    minDuration: 9,
+    maxDuration: 17,
+    sway: 65,
     colors: [
-      ["#a91f18", "#e53b24", "#ff7950"],
-      ["#bd2b19", "#f04b25", "#ff9b43"],
-      ["#a52a22", "#d9442c", "#ed7c40"],
-      ["#c74a13", "#f28a22", "#ffc24d"],
-      ["#b52c25", "#df4c31", "#f9a05b"],
-      ["#8f291f", "#c83b2c", "#e86c43"]
+      ["#8f1715", "#c92720", "#f15b3a"],
+      ["#a61d18", "#e23b25", "#ff8250"],
+      ["#9e2718", "#d94324", "#f78b3e"],
+      ["#a8321d", "#e45b2b", "#ffb34d"],
+      ["#7e1c1c", "#bd3026", "#ed6a43"],
+      ["#a33c17", "#d96a20", "#f7a63e"]
     ]
   };
 
@@ -42,7 +41,7 @@
 
     .maple-fall-leaf {
       position: absolute;
-      top: -80px;
+      top: -70px;
       left: 0;
       width: var(--leaf-size);
       height: var(--leaf-size);
@@ -54,60 +53,34 @@
     }
 
     .maple-fall-leaf svg {
+      display: block;
       width: 100%;
       height: 100%;
       overflow: visible;
-      display: block;
-      filter: drop-shadow(0 2px 2px rgba(55, 20, 5, 0.18));
+      filter: drop-shadow(0 2px 2px rgba(45, 15, 5, .2));
     }
 
     @keyframes maple-fall-drop {
       0% {
-        transform:
-          translate3d(0, -8vh, 0)
-          rotate(0deg)
-          rotateY(0deg);
+        transform: translate3d(0, -8vh, 0) rotate(0deg) rotateY(0deg);
       }
-
-      20% {
-        transform:
-          translate3d(var(--sway-a), 20vh, 0)
-          rotate(100deg)
-          rotateY(35deg);
+      25% {
+        transform: translate3d(var(--sway-a), 25vh, 0) rotate(100deg) rotateY(35deg);
       }
-
-      42% {
-        transform:
-          translate3d(var(--sway-b), 43vh, 0)
-          rotate(230deg)
-          rotateY(115deg);
+      50% {
+        transform: translate3d(var(--sway-b), 52vh, 0) rotate(230deg) rotateY(145deg);
       }
-
-      65% {
-        transform:
-          translate3d(var(--sway-c), 68vh, 0)
-          rotate(340deg)
-          rotateY(210deg);
+      75% {
+        transform: translate3d(var(--sway-c), 80vh, 0) rotate(390deg) rotateY(260deg);
       }
-
-      82% {
-        transform:
-          translate3d(var(--sway-d), 88vh, 0)
-          rotate(480deg)
-          rotateY(285deg);
-      }
-
       100% {
-        transform:
-          translate3d(var(--sway-e), 112vh, 0)
-          rotate(620deg)
-          rotateY(360deg);
+        transform: translate3d(var(--sway-d), 112vh, 0) rotate(540deg) rotateY(360deg);
       }
     }
 
     @media (max-width: 768px) {
       #maple-fall-container {
-        opacity: 0.85;
+        opacity: .82;
       }
     }
   `;
@@ -119,64 +92,80 @@
   container.setAttribute("aria-hidden", "true");
   document.body.appendChild(container);
 
-  // 五裂枫叶轮廓，配合锯齿边缘和自然叶脉
+  /*
+   * 五裂糖枫叶轮廓
+   * 中央主裂片 + 左右上侧裂片 + 左右下侧裂片
+   * 通过锯齿折线和掌状分叉叶脉增强真实感
+   */
   function createLeafSVG(id, colors, flip) {
     const [dark, mid, light] = colors;
 
-    // 叶片外轮廓：中央主裂片、两侧裂片与基部裂片
-    const path = `
+    const outline = `
       M 50 96
-      L 46 77
-      L 35 84
-      L 38 69
-      L 21 73
-      L 28 59
-      L 7 57
-      L 19 46
-      L 4 35
-      L 26 35
-      L 24 17
-      L 40 27
-      L 50 2
-      L 60 27
-      L 76 17
-      L 74 35
-      L 96 35
-      L 81 46
-      L 93 57
-      L 72 59
-      L 79 73
-      L 62 69
-      L 65 84
-      L 54 77
-      Z
+      L 46 83 L 42 87 L 39 79
+      L 34 84 L 32 75
+      L 25 79 L 27 69
+      L 17 72 L 21 63
+      L 8 62 L 17 54
+      L 3 47 L 20 44
+      L 14 32 L 28 36
+      L 27 21 L 39 31
+      L 50 3
+      L 61 31 L 73 21
+      L 72 36 L 86 32
+      L 80 44 L 97 47
+      L 83 54 L 92 62
+      L 79 63 L 83 72
+      L 73 69 L 75 79
+      L 68 75 L 66 84
+      L 61 79 L 58 87
+      L 54 83 Z
     `;
 
-    // 主叶脉及分支
     const veins = `
-      <g fill="none" stroke-linecap="round">
-        <path d="M50 96 L50 13"
-          stroke="${dark}" stroke-width="2.1" opacity=".85"/>
+      <g fill="none"
+         stroke-linecap="round"
+         stroke-linejoin="round">
 
-        <path d="M50 70 L28 43
-                 M50 61 L74 43
-                 M50 50 L35 30
-                 M50 45 L65 30
-                 M50 80 L34 65
-                 M50 80 L66 65"
-          stroke="${dark}" stroke-width="1.35" opacity=".75"/>
+        <!-- 主叶脉 -->
+        <path d="M50 96 L50 12"
+          stroke="${dark}" stroke-width="2.2" opacity=".9"/>
 
-        <path d="M50 70 L28 43
-                 M50 61 L74 43
-                 M50 50 L35 30
-                 M50 45 L65 30
-                 M50 80 L34 65
-                 M50 80 L66 65"
-          stroke="${light}" stroke-width=".65" opacity=".65"/>
+        <!-- 五条掌状主脉 -->
+        <path d="
+          M50 72 L20 44
+          M50 60 L28 36
+          M50 47 L39 31
+          M50 60 L80 44
+          M50 47 L61 31
+          M50 72 L80 44
+          M50 80 L33 69
+          M50 80 L67 69"
+          stroke="${dark}" stroke-width="1.35" opacity=".85"/>
 
-        <path d="M50 84 L44 90
-                 M50 84 L56 90"
-          stroke="${dark}" stroke-width="1.1" opacity=".7"/>
+        <!-- 细小侧脉 -->
+        <path d="
+          M38 61 L27 57
+          M32 54 L22 51
+          M37 48 L30 43
+          M40 40 L35 36
+          M62 61 L73 57
+          M68 54 L78 51
+          M63 48 L70 43
+          M60 40 L65 36
+          M43 76 L35 73
+          M57 76 L65 73"
+          stroke="${dark}" stroke-width=".8" opacity=".65"/>
+
+        <!-- 叶脉高光 -->
+        <path d="
+          M51 15 L51 94
+          M49 70 L21 45
+          M49 59 L29 37
+          M49 46 L40 32
+          M51 59 L79 45
+          M51 46 L60 32"
+          stroke="${light}" stroke-width=".55" opacity=".7"/>
       </g>
     `;
 
@@ -184,55 +173,54 @@
       <svg viewBox="0 0 100 104"
            xmlns="http://www.w3.org/2000/svg"
            aria-hidden="true">
+
         <defs>
-          <linearGradient id="${id}-fill"
-                          x1="0" y1="1" x2="1" y2="0">
+          <linearGradient id="${id}-grad"
+            x1="0" y1="1" x2="1" y2="0">
             <stop offset="0%" stop-color="${dark}"/>
             <stop offset="48%" stop-color="${mid}"/>
             <stop offset="100%" stop-color="${light}"/>
           </linearGradient>
 
           <linearGradient id="${id}-shine"
-                          x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#fff4cb" stop-opacity=".3"/>
+            x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff5cf" stop-opacity=".25"/>
             <stop offset="50%" stop-color="#fff" stop-opacity=".03"/>
-            <stop offset="100%" stop-color="#64130b" stop-opacity=".2"/>
+            <stop offset="100%" stop-color="#52120c" stop-opacity=".2"/>
           </linearGradient>
 
           <clipPath id="${id}-clip">
-            <path d="${path}"/>
+            <path d="${outline}"/>
           </clipPath>
         </defs>
 
         <g transform="${flip ? "translate(100 0) scale(-1 1)" : ""}">
-          <path d="${path}"
-                fill="url(#${id}-fill)"
-                stroke="${dark}"
-                stroke-width="1.1"
-                stroke-linejoin="round"/>
+          <!-- 叶片底色 -->
+          <path d="${outline}"
+            fill="url(#${id}-grad)"
+            stroke="${dark}"
+            stroke-width="1.15"
+            stroke-linejoin="round"/>
 
+          <!-- 叶片渐变与叶脉 -->
           <g clip-path="url(#${id}-clip)">
-            <path d="${path}" fill="url(#${id}-shine)"/>
-
-            <path d="M50 8
-                     C43 31 44 53 50 96
-                     C55 65 59 34 50 8 Z"
-                  fill="${light}" opacity=".12"/>
-
+            <path d="${outline}" fill="url(#${id}-shine)"/>
             ${veins}
           </g>
 
-          <path d="M50 96 Q49 101 46 104"
-                fill="none"
-                stroke="${dark}"
-                stroke-width="2"
-                stroke-linecap="round"/>
+          <!-- 叶柄 -->
+          <path d="M50 93 Q49 100 45 104"
+            fill="none"
+            stroke="${dark}"
+            stroke-width="2.4"
+            stroke-linecap="round"/>
         </g>
       </svg>
     `;
   }
 
   let leafId = 0;
+  let timer = null;
 
   function createLeaf() {
     if (container.childElementCount >= CONFIG.maxLeaves) return;
@@ -252,26 +240,23 @@
       CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)];
 
     const sway = CONFIG.sway;
-
-    const randomOffset = () =>
+    const offset = () =>
       Math.round((Math.random() * 2 - 1) * sway) + "px";
 
     leaf.style.setProperty("--leaf-size", size + "px");
-    leaf.style.setProperty("--sway-a", randomOffset());
-    leaf.style.setProperty("--sway-b", randomOffset());
-    leaf.style.setProperty("--sway-c", randomOffset());
-    leaf.style.setProperty("--sway-d", randomOffset());
-    leaf.style.setProperty("--sway-e", randomOffset());
+    leaf.style.setProperty("--sway-a", offset());
+    leaf.style.setProperty("--sway-b", offset());
+    leaf.style.setProperty("--sway-c", offset());
+    leaf.style.setProperty("--sway-d", offset());
 
     leaf.style.left = Math.random() * 100 + "vw";
-    leaf.style.opacity = String(0.65 + Math.random() * 0.35);
+    leaf.style.opacity = String(.65 + Math.random() * .35);
     leaf.style.animationDuration = duration + "s";
 
-    const flip = Math.random() > 0.5;
     leaf.innerHTML = createLeafSVG(
       "maple-" + (++leafId),
       colors,
-      flip
+      Math.random() > .5
     );
 
     container.appendChild(leaf);
@@ -280,8 +265,6 @@
       leaf.remove();
     }, { once: true });
   }
-
-  let timer = null;
 
   function start() {
     if (timer !== null) return;
