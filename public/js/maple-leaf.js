@@ -1,268 +1,307 @@
-/**
- * 枫叶飘落特效 —— 适配 Hexo Redefine 主题
- * 纯原生 Canvas，无依赖，不污染全局变量
- */
-;(function () {
-  'use strict';
 
-  /* ========== 可配置参数 ========== */
-  var CONFIG = {
-    count: 30,        // 枫叶数量
-    size: 26,         // 枫叶基础大小 (px)
-    speed: 3,         // 下落速度倍率 (1-10)
-    wind: 1.0,        // 风力 (-5.0 到 5.0，正=向右)
-    zIndex: 9999      // canvas 层级，确保在博客内容之上
+(() => {
+  "use strict";
+
+  if (window.__mapleFallInitialized) return;
+  window.__mapleFallInitialized = true;
+
+  // 尊重系统减少动态效果设置
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  const CONFIG = {
+    interval: 700,       // 生成间隔，毫秒
+    maxLeaves: 20,       // 同屏最大叶片数量
+    minSize: 24,         // 最小叶片尺寸，px
+    maxSize: 48,         // 最大叶片尺寸，px
+    minDuration: 9,      // 最短飘落时间，秒
+    maxDuration: 17,     // 最长飘落时间，秒
+    sway: 65,            // 左右摆动幅度
+    colors: [
+      ["#a91f18", "#e53b24", "#ff7950"],
+      ["#bd2b19", "#f04b25", "#ff9b43"],
+      ["#a52a22", "#d9442c", "#ed7c40"],
+      ["#c74a13", "#f28a22", "#ffc24d"],
+      ["#b52c25", "#df4c31", "#f9a05b"],
+      ["#8f291f", "#c83b2c", "#e86c43"]
+    ]
   };
 
-  /* 尊重用户减少动效偏好 */
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const style = document.createElement("style");
 
-  /* ========== 画布初始化 ========== */
-  var canvas = document.createElement('canvas');
-  canvas.id = 'maple-leaves-canvas';
-  canvas.style.cssText =
-    'position:fixed!important;top:0!important;left:0!important;' +
-    'width:100%!important;height:100%!important;' +
-    'pointer-events:none!important;z-index:' + CONFIG.zIndex + '!important;';
-  document.body.appendChild(canvas);
-
-  var ctx = canvas.getContext('2d');
-  var W, H;
-  var leaves = [];
-  var running = true;
-  var mouseX = -9999, mouseY = -9999;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  /* ========== 鼠标跟踪（可选排斥效果）========== */
-  document.addEventListener('mousemove', function (e) {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-  document.addEventListener('mouseleave', function () {
-    mouseX = -9999;
-    mouseY = -9999;
-  });
-
-  /* ========== 颜色工具 ========== */
-  function hexRgb(hex) {
-    hex = hex.replace('#', '');
-    return [
-      parseInt(hex.substring(0, 2), 16),
-      parseInt(hex.substring(2, 4), 16),
-      parseInt(hex.substring(4, 6), 16)
-    ];
-  }
-  function darker(hex, n) {
-    var c = hexRgb(hex);
-    return 'rgb(' + Math.max(0, c[0] - n) + ',' + Math.max(0, c[1] - n) + ',' + Math.max(0, c[2] - n) + ')';
-  }
-  function lighter(hex, n) {
-    var c = hexRgb(hex);
-    return 'rgb(' + Math.min(255, c[0] + n) + ',' + Math.min(255, c[1] + n) + ',' + Math.min(255, c[2] + n) + ')';
-  }
-
-  /* ========== 枫叶颜色库 ========== */
-  var COLORS = [
-    '#8B1A1A', '#9B2335', '#A52A2A', '#B22222', '#C0392B',
-    '#CD3333', '#CC4444', '#D35400', '#E67E22', '#D2691E',
-    '#CD6839', '#B8601A', '#C97D1A', '#DAA520', '#CC7722',
-    '#9B3A12', '#A0522D'
-  ];
-
-  /* ========== 绘制单片枫叶 ========== */
-  function drawLeaf(s, color, alpha) {
-    ctx.save();
-    ctx.globalAlpha = alpha;
-
-    /* 径向渐变填充 */
-    var grad = ctx.createRadialGradient(0, -s * 0.1, 0, 0, 0, s * 0.82);
-    grad.addColorStop(0, lighter(color, 38));
-    grad.addColorStop(0.55, color);
-    grad.addColorStop(1, darker(color, 28));
-    ctx.fillStyle = grad;
-
-    /* 五裂枫叶轮廓 —— 10 段三次贝塞尔曲线 */
-    ctx.beginPath();
-    ctx.moveTo(0, s * 0.55);
-
-    // 右下裂片
-    ctx.bezierCurveTo(s * 0.08, s * 0.38, s * 0.28, s * 0.36, s * 0.48, s * 0.18);
-    ctx.bezierCurveTo(s * 0.40, s * 0.28, s * 0.26, s * 0.18, s * 0.22, s * 0.06);
-    // 右上裂片
-    ctx.bezierCurveTo(s * 0.34, s * 0.02, s * 0.52, -s * 0.04, s * 0.56, -s * 0.26);
-    ctx.bezierCurveTo(s * 0.44, -s * 0.16, s * 0.28, -s * 0.16, s * 0.16, -s * 0.22);
-    // 顶部主裂片（右弧）
-    ctx.bezierCurveTo(s * 0.22, -s * 0.46, s * 0.12, -s * 0.68, 0, -s * 0.78);
-    // 顶部主裂片（左弧）
-    ctx.bezierCurveTo(-s * 0.12, -s * 0.68, -s * 0.22, -s * 0.46, -s * 0.16, -s * 0.22);
-    // 左上裂片
-    ctx.bezierCurveTo(-s * 0.28, -s * 0.16, -s * 0.44, -s * 0.16, -s * 0.56, -s * 0.26);
-    ctx.bezierCurveTo(-s * 0.52, -s * 0.04, -s * 0.34, s * 0.02, -s * 0.22, s * 0.06);
-    // 左下裂片
-    ctx.bezierCurveTo(-s * 0.26, s * 0.18, -s * 0.40, s * 0.28, -s * 0.48, s * 0.18);
-    ctx.bezierCurveTo(-s * 0.28, s * 0.36, -s * 0.08, s * 0.38, 0, s * 0.55);
-    ctx.closePath();
-    ctx.fill();
-
-    /* 边缘描线 */
-    ctx.strokeStyle = darker(color, 42);
-    ctx.lineWidth = Math.max(0.4, s * 0.022);
-    ctx.stroke();
-
-    /* ---- 叶脉 ---- */
-    ctx.strokeStyle = darker(color, 55);
-    ctx.lineWidth = Math.max(0.3, s * 0.018);
-    ctx.globalAlpha = alpha * 0.38;
-
-    // 中脉
-    ctx.beginPath();
-    ctx.moveTo(0, s * 0.5);
-    ctx.lineTo(0, -s * 0.65);
-    ctx.stroke();
-
-    // 四条主侧脉
-    var veins = [
-      [0, s * 0.05, s * 0.22, s * 0.02, s * 0.42, s * 0.14],
-      [0, -s * 0.12, s * 0.22, -s * 0.12, s * 0.48, -s * 0.2],
-      [0, s * 0.05, -s * 0.22, s * 0.02, -s * 0.42, s * 0.14],
-      [0, -s * 0.12, -s * 0.22, -s * 0.12, -s * 0.48, -s * 0.2]
-    ];
-    for (var i = 0; i < veins.length; i++) {
-      var v = veins[i];
-      ctx.beginPath();
-      ctx.moveTo(v[0], v[1]);
-      ctx.quadraticCurveTo(v[2], v[3], v[4], v[5]);
-      ctx.stroke();
+  style.textContent = `
+    #maple-fall-container {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 9999;
+      contain: strict;
     }
 
-    // 顶部小侧脉
-    ctx.globalAlpha = alpha * 0.22;
-    ctx.beginPath(); ctx.moveTo(0, -s * 0.35); ctx.lineTo(s * 0.08, -s * 0.58); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(0, -s * 0.35); ctx.lineTo(-s * 0.08, -s * 0.58); ctx.stroke();
+    .maple-fall-leaf {
+      position: absolute;
+      top: -80px;
+      left: 0;
+      width: var(--leaf-size);
+      height: var(--leaf-size);
+      pointer-events: none;
+      user-select: none;
+      will-change: transform;
+      transform-origin: center;
+      animation: maple-fall-drop linear forwards;
+    }
 
-    /* ---- 叶柄 ---- */
-    ctx.globalAlpha = alpha * 0.72;
-    ctx.strokeStyle = darker(color, 62);
-    ctx.lineWidth = Math.max(0.8, s * 0.04);
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(0, s * 0.55);
-    ctx.quadraticCurveTo(s * 0.015, s * 0.72, -s * 0.04, s * 0.95);
-    ctx.stroke();
+    .maple-fall-leaf svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      display: block;
+      filter: drop-shadow(0 2px 2px rgba(55, 20, 5, 0.18));
+    }
 
-    ctx.restore();
+    @keyframes maple-fall-drop {
+      0% {
+        transform:
+          translate3d(0, -8vh, 0)
+          rotate(0deg)
+          rotateY(0deg);
+      }
+
+      20% {
+        transform:
+          translate3d(var(--sway-a), 20vh, 0)
+          rotate(100deg)
+          rotateY(35deg);
+      }
+
+      42% {
+        transform:
+          translate3d(var(--sway-b), 43vh, 0)
+          rotate(230deg)
+          rotateY(115deg);
+      }
+
+      65% {
+        transform:
+          translate3d(var(--sway-c), 68vh, 0)
+          rotate(340deg)
+          rotateY(210deg);
+      }
+
+      82% {
+        transform:
+          translate3d(var(--sway-d), 88vh, 0)
+          rotate(480deg)
+          rotateY(285deg);
+      }
+
+      100% {
+        transform:
+          translate3d(var(--sway-e), 112vh, 0)
+          rotate(620deg)
+          rotateY(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      #maple-fall-container {
+        opacity: 0.85;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  const container = document.createElement("div");
+  container.id = "maple-fall-container";
+  container.setAttribute("aria-hidden", "true");
+  document.body.appendChild(container);
+
+  // 五裂枫叶轮廓，配合锯齿边缘和自然叶脉
+  function createLeafSVG(id, colors, flip) {
+    const [dark, mid, light] = colors;
+
+    // 叶片外轮廓：中央主裂片、两侧裂片与基部裂片
+    const path = `
+      M 50 96
+      L 46 77
+      L 35 84
+      L 38 69
+      L 21 73
+      L 28 59
+      L 7 57
+      L 19 46
+      L 4 35
+      L 26 35
+      L 24 17
+      L 40 27
+      L 50 2
+      L 60 27
+      L 76 17
+      L 74 35
+      L 96 35
+      L 81 46
+      L 93 57
+      L 72 59
+      L 79 73
+      L 62 69
+      L 65 84
+      L 54 77
+      Z
+    `;
+
+    // 主叶脉及分支
+    const veins = `
+      <g fill="none" stroke-linecap="round">
+        <path d="M50 96 L50 13"
+          stroke="${dark}" stroke-width="2.1" opacity=".85"/>
+
+        <path d="M50 70 L28 43
+                 M50 61 L74 43
+                 M50 50 L35 30
+                 M50 45 L65 30
+                 M50 80 L34 65
+                 M50 80 L66 65"
+          stroke="${dark}" stroke-width="1.35" opacity=".75"/>
+
+        <path d="M50 70 L28 43
+                 M50 61 L74 43
+                 M50 50 L35 30
+                 M50 45 L65 30
+                 M50 80 L34 65
+                 M50 80 L66 65"
+          stroke="${light}" stroke-width=".65" opacity=".65"/>
+
+        <path d="M50 84 L44 90
+                 M50 84 L56 90"
+          stroke="${dark}" stroke-width="1.1" opacity=".7"/>
+      </g>
+    `;
+
+    return `
+      <svg viewBox="0 0 100 104"
+           xmlns="http://www.w3.org/2000/svg"
+           aria-hidden="true">
+        <defs>
+          <linearGradient id="${id}-fill"
+                          x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stop-color="${dark}"/>
+            <stop offset="48%" stop-color="${mid}"/>
+            <stop offset="100%" stop-color="${light}"/>
+          </linearGradient>
+
+          <linearGradient id="${id}-shine"
+                          x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fff4cb" stop-opacity=".3"/>
+            <stop offset="50%" stop-color="#fff" stop-opacity=".03"/>
+            <stop offset="100%" stop-color="#64130b" stop-opacity=".2"/>
+          </linearGradient>
+
+          <clipPath id="${id}-clip">
+            <path d="${path}"/>
+          </clipPath>
+        </defs>
+
+        <g transform="${flip ? "translate(100 0) scale(-1 1)" : ""}">
+          <path d="${path}"
+                fill="url(#${id}-fill)"
+                stroke="${dark}"
+                stroke-width="1.1"
+                stroke-linejoin="round"/>
+
+          <g clip-path="url(#${id}-clip)">
+            <path d="${path}" fill="url(#${id}-shine)"/>
+
+            <path d="M50 8
+                     C43 31 44 53 50 96
+                     C55 65 59 34 50 8 Z"
+                  fill="${light}" opacity=".12"/>
+
+            ${veins}
+          </g>
+
+          <path d="M50 96 Q49 101 46 104"
+                fill="none"
+                stroke="${dark}"
+                stroke-width="2"
+                stroke-linecap="round"/>
+        </g>
+      </svg>
+    `;
   }
 
-  /* ========== 创建单片枫叶 ========== */
-  function createLeaf(startTop) {
-    var sizeMul = 0.5 + Math.random() * 0.95;
-    return {
-      x: Math.random() * W,
-      y: startTop ? -(CONFIG.size * 2 + Math.random() * 150) : Math.random() * H,
-      s: CONFIG.size * sizeMul,
-      vy: (0.35 + Math.random() * 1.7) * (CONFIG.speed / 3),
-      vx: 0,
-      rot: Math.random() * Math.PI * 2,
-      rotV: (Math.random() - 0.5) * 0.03,
-      swayPh: Math.random() * Math.PI * 2,
-      swayAmp: 0.4 + Math.random() * 1.8,
-      swaySpd: 0.007 + Math.random() * 0.02,
-      flipPh: Math.random() * Math.PI * 2,
-      flipSpd: 0.004 + Math.random() * 0.015,
-      wobPh: Math.random() * Math.PI * 2,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      alpha: 0.42 + Math.random() * 0.52,
-      depth: Math.random()
-    };
+  let leafId = 0;
+
+  function createLeaf() {
+    if (container.childElementCount >= CONFIG.maxLeaves) return;
+
+    const leaf = document.createElement("div");
+    leaf.className = "maple-fall-leaf";
+
+    const size =
+      CONFIG.minSize +
+      Math.random() * (CONFIG.maxSize - CONFIG.minSize);
+
+    const duration =
+      CONFIG.minDuration +
+      Math.random() * (CONFIG.maxDuration - CONFIG.minDuration);
+
+    const colors =
+      CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)];
+
+    const sway = CONFIG.sway;
+
+    const randomOffset = () =>
+      Math.round((Math.random() * 2 - 1) * sway) + "px";
+
+    leaf.style.setProperty("--leaf-size", size + "px");
+    leaf.style.setProperty("--sway-a", randomOffset());
+    leaf.style.setProperty("--sway-b", randomOffset());
+    leaf.style.setProperty("--sway-c", randomOffset());
+    leaf.style.setProperty("--sway-d", randomOffset());
+    leaf.style.setProperty("--sway-e", randomOffset());
+
+    leaf.style.left = Math.random() * 100 + "vw";
+    leaf.style.opacity = String(0.65 + Math.random() * 0.35);
+    leaf.style.animationDuration = duration + "s";
+
+    const flip = Math.random() > 0.5;
+    leaf.innerHTML = createLeafSVG(
+      "maple-" + (++leafId),
+      colors,
+      flip
+    );
+
+    container.appendChild(leaf);
+
+    leaf.addEventListener("animationend", () => {
+      leaf.remove();
+    }, { once: true });
   }
 
-  /* ========== 初始化 ========== */
-  function init() {
-    leaves = [];
-    for (var i = 0; i < CONFIG.count; i++) {
-      leaves.push(createLeaf(false));
+  let timer = null;
+
+  function start() {
+    if (timer !== null) return;
+    timer = window.setInterval(createLeaf, CONFIG.interval);
+  }
+
+  function stop() {
+    if (timer !== null) {
+      window.clearInterval(timer);
+      timer = null;
     }
   }
 
-  function syncCount() {
-    while (leaves.length < CONFIG.count) leaves.push(createLeaf(true));
-    while (leaves.length > CONFIG.count) leaves.pop();
-  }
-
-  /* ========== 更新 ========== */
-  function update(lf) {
-    lf.swayPh += lf.swaySpd;
-    lf.wobPh += 0.008;
-    var sway = Math.sin(lf.swayPh) * lf.swayAmp;
-    lf.vx = sway + CONFIG.wind * 0.45 + Math.sin(lf.wobPh) * 0.22;
-
-    // 鼠标排斥（130px 范围内）
-    var dx = lf.x - mouseX;
-    var dy = lf.y - mouseY;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist < 130 && dist > 0.1) {
-      var f = (130 - dist) / 130 * 1.6;
-      lf.vx += (dx / dist) * f;
-      lf.y += (dy / dist) * f * 0.35;
-    }
-
-    lf.x += lf.vx;
-    lf.y += lf.vy;
-    lf.rot += lf.rotV + Math.sin(lf.swayPh) * 0.007;
-    lf.flipPh += lf.flipSpd;
-
-    // 超出边界重置到顶部
-    if (lf.y > H + lf.s * 2) {
-      lf.y = -lf.s * 2 - Math.random() * 80;
-      lf.x = Math.random() * W;
-    }
-    if (lf.x > W + lf.s * 2) lf.x = -lf.s * 2;
-    if (lf.x < -lf.s * 2) lf.x = W + lf.s * 2;
-  }
-
-  /* ========== 渲染 ========== */
-  function render(lf) {
-    ctx.save();
-    ctx.translate(lf.x, lf.y);
-    ctx.rotate(lf.rot);
-    // 水平缩放模拟 3D 翻转
-    ctx.scale(Math.cos(lf.flipPh), 1);
-    // 景深影响
-    var ds = 0.65 + lf.depth * 0.35;
-    var da = 0.45 + lf.depth * 0.55;
-    ctx.scale(ds, ds);
-    drawLeaf(lf.s, lf.color, lf.alpha * da);
-    ctx.restore();
-  }
-
-  /* ========== 主循环 ========== */
-  function loop() {
-    if (!running) return;
-    ctx.clearRect(0, 0, W, H);
-    for (var i = 0; i < leaves.length; i++) {
-      update(leaves[i]);
-      render(leaves[i]);
-    }
-    requestAnimationFrame(loop);
-  }
-
-  init();
-  loop();
-
-  /* ========== 页面不可见时暂停，节省性能 ========== */
-  document.addEventListener('visibilitychange', function () {
+  document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      running = false;
+      stop();
     } else {
-      running = true;
-      loop();
+      start();
     }
   });
 
+  start();
 })();
