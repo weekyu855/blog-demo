@@ -51,6 +51,7 @@ npm run build       # 只生成静态文件到 public/
 | `source/_posts/` | 文章 Markdown | ✅ 提交 |
 | `source/_data/` | 友链、书签、相册等数据 | ✅ 提交 |
 | `source/*/index.md` | 独立页面（关于、标签、分类等） | ✅ 提交 |
+| `source/images/` | **正文配图**（文章插图、头像、首页背景图等，统一用 `/images/xxx` 引用） | ✅ 提交 |
 | `source/music/` | 背景音乐 MP3 与封面 | ✅ 提交 |
 | `_config.yml` | Hexo 站点配置 | ✅ 提交 |
 | `_config.redefine.yml` | Redefine 主题配置（**主要改这里**） | ✅ 提交 |
@@ -61,6 +62,8 @@ npm run build       # 只生成静态文件到 public/
 | `db.json` | Hexo 缓存 | ❌ 已在 `.gitignore` |
 
 > `themes/redefine` 里除了主题代码，还包含本站的定制（`layout/components/header/head.ejs` 的早期主题设置、`languages/zh-CN.yml` 的「常用 / 相册 / 书签」等），比 npm 上的 `hexo-theme-redefine` 包内容更新，**不要用 npm 包替换它**。
+>
+> **自己的图片一律放 `source/images/`，不要放 `themes/redefine/source/images/`。** 两个位置生成的最终 URL 都是 `/images/xxx`，网页上没有任何区别，但放在主题目录里的图在更新主题时有被覆盖或删除的风险。`themes/redefine/source/images/` 现在只保留主题自身使用的资源（`bookmark-placeholder.svg`、`loading.svg`、`redefine-*`、`wallhaven-*`、`2.png`）。
 
 ## 四、常见问题
 
