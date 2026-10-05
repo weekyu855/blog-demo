@@ -45,6 +45,19 @@ colors:
 # COLORS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
 
+# OPENING ANIMATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
+# 开场动画：站名字标浮现 + 幕布向上揭开
+# 实现见 themes/redefine/layout/components/header/opening.ejs
+# 只在"首次访问本次会话"播放一次（sessionStorage 记忆），点击/按键可立即跳过。
+opening_animation:
+  enable: true # 总开关，设为 false 即完全关闭
+  duration: 1800 # 总时长，单位毫秒；调大调小都会按比例作用于各分镜
+  # 站名字标下方的小字；留空则自动使用上方 info.subtitle
+  subtitle:
+  skip_hint: true # 是否在底部显示"点击任意处跳过"提示
+# OPENING ANIMATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
+
+
 # SITE CUSTOMIZATION >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> start
 # Docs: https://redefine-docs.ohevan.com/basic/global
 global:

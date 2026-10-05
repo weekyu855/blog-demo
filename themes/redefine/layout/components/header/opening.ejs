@@ -1,0 +1,313 @@
+<%
+    // ── 开场动画（brand reveal + curtain lift）──────────────────────────────
+    // 配置见 _config.redefine.yml 的 opening_animation 段。
+    // 设计要点：
+    //   1) 幕布 HTML 由服务端直出，避免首屏白闪；
+    //   2) 已看过的访客在首次绘制前就把它隐藏（内联脚本，同步执行）；
+    //   3) 放在 #swup 容器之外 —— swup 换页不重建、不重播；
+    //   4) 纯 CSS keyframes 驱动，总时长由一个变量控制，不用 anime.js。
+    const opening = theme.opening_animation || {};
+    const openingEnable = opening.enable === true;
+    const openingDuration = Number(opening.duration) > 0 ? Number(opening.duration) : 1800;
+    const openingShowSkipHint = opening.skip_hint !== false;
+    const openingSubtitle = (opening.subtitle !== undefined && opening.subtitle !== null)
+        ? String(opening.subtitle)
+        : (theme.info.subtitle || '');
+%>
+<% if (openingEnable) { %>
+<style>
+    /* 色板跟随主题的 .dark / .light class，不另造一套配色 */
+    .opening {
+        --opening-bg: #ffffff;
+        --opening-fg: #1c1c1e;
+        --opening-accent: #A31F34;
+        --opening-hint: rgba(28, 28, 30, 0.42);
+        --opening-duration: <%= openingDuration %>ms;
+    }
+
+    html.dark .opening {
+        --opening-bg: #202124;
+        --opening-fg: #f2f1ef;
+        --opening-accent: #d4596b;
+        --opening-hint: rgba(242, 241, 239, 0.42);
+    }
+
+    .opening {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--opening-bg);
+        z-index: 1100;
+        overflow: hidden;
+        /* 幕布整体上提，露出下面的页面 */
+        animation: opening-curtain-lift var(--opening-duration)
+                   cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        will-change: transform;
+    }
+
+    .opening__stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1.5rem;
+        text-align: center;
+        /* 内容比幕布略早退场，避免'字跟着幕布一起被推走'的廉价感 */
+        animation: opening-stage-out var(--opening-duration) ease-in forwards;
+    }
+
+    .opening__title {
+        margin: 0;
+        font-family: 'Chillax-Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                     'PingFang SC', 'Microsoft YaHei', sans-serif;
+        font-size: clamp(2rem, 7.5vw, 3.4rem);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: 0.06em;
+        color: var(--opening-fg);
+        animation: opening-title-in var(--opening-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .opening__rule {
+        width: 0;
+        height: 2px;
+        margin-top: 1.05rem;
+        border-radius: 2px;
+        background: linear-gradient(90deg,
+                    transparent 0%,
+                    var(--opening-accent) 32%,
+                    var(--opening-accent) 68%,
+                    transparent 100%);
+        animation: opening-rule-in var(--opening-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .opening__subtitle {
+        margin-top: 0.9rem;
+        font-size: clamp(0.82rem, 2.6vw, 1rem);
+        letter-spacing: 0.34em;
+        /* 中文加字距会把最后一个字的右侧空白算进去，这里补回来 */
+        text-indent: 0.34em;
+        color: var(--opening-hint);
+        animation: opening-subtitle-in var(--opening-duration) cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .opening__skip {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 2.2rem;
+        font-size: 0.74rem;
+        letter-spacing: 0.16em;
+        color: var(--opening-hint);
+        animation: opening-hint-in var(--opening-duration) ease-out both;
+    }
+
+    @keyframes opening-title-in {
+        0%   { opacity: 0; letter-spacing: 0.2em; transform: translateY(0.5rem); }
+        22%  { opacity: 1; letter-spacing: 0.06em; transform: translateY(0); }
+        100% { opacity: 1; letter-spacing: 0.06em; transform: translateY(0); }
+    }
+
+    @keyframes opening-rule-in {
+        0%, 24% { width: 0; opacity: 0; }
+        40%     { opacity: 1; }
+        62%     { width: min(11rem, 46vw); opacity: 1; }
+        100%    { width: min(11rem, 46vw); opacity: 1; }
+    }
+
+    @keyframes opening-subtitle-in {
+        0%, 34% { opacity: 0; transform: translateY(0.4rem); }
+        56%     { opacity: 1; transform: translateY(0); }
+        100%    { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes opening-hint-in {
+        0%, 55% { opacity: 0; }
+        70%     { opacity: 0.55; }
+        86%     { opacity: 0.24; }
+        100%    { opacity: 0.55; }
+    }
+
+    @keyframes opening-stage-out {
+        0%, 40% { opacity: 1; transform: translateY(0); }
+        62%     { opacity: 0; transform: translateY(-1rem); }
+        100%    { opacity: 0; transform: translateY(-1rem); }
+    }
+
+    @keyframes opening-curtain-lift {
+        0%, 42% { transform: translateY(0); }
+        100%    { transform: translateY(-100%); }
+    }
+
+    @media (max-width: 600px) {
+        .opening__skip {
+            bottom: 1.6rem;
+        }
+    }
+
+    /* 系统开了"减少动态效果"：直接快进到揭幕结束 */
+    @media (prefers-reduced-motion: reduce) {
+        .opening {
+            animation-duration: 260ms;
+        }
+        .opening__stage,
+        .opening__title,
+        .opening__rule,
+        .opening__subtitle,
+        .opening__skip {
+            animation: none;
+            opacity: 0;
+        }
+    }
+
+    /* 已看过的访客：解析到这一行时立即隐藏，早于首次绘制 */
+    .opening.opening--seen {
+        display: none !important;
+    }
+
+    body.opening--active {
+        overflow: hidden;
+    }
+</style>
+
+<div class="opening opening--seen" id="opening-veil" aria-hidden="true">
+    <div class="opening__stage">
+        <h2 class="opening__title"><%= theme.info.title %></h2>
+        <span class="opening__rule"></span>
+        <% if (openingSubtitle) { %>
+        <p class="opening__subtitle"><%= openingSubtitle %></p>
+        <% } %>
+    </div>
+    <% if (openingShowSkipHint) { %>
+    <p class="opening__skip">点击任意处跳过</p>
+    <% } %>
+</div>
+
+<script>
+    (function () {
+        var OPENING_KEY = 'REDEFINE-OPENING-SEEN';
+
+        // swup 换页会重跑带 data-swup-reload-script 的脚本，这里做一次性守卫
+        if (window.__REDEFINE_OPENING_DONE__) { return; }
+
+        var veil = document.getElementById('opening-veil');
+        if (!veil) { return; }
+
+        var seen = false;
+        try {
+            seen = sessionStorage.getItem(OPENING_KEY) === '1';
+        } catch (e) {
+            seen = false; // 隐私模式等场景下 sessionStorage 可能不可用
+        }
+
+        var reducedMotion = window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // 调试后门：URL 带 ?opening=1 时强制重播（也用于给访客分享预览链接）
+        var forceReplay = /[?&]opening=1(&|$)/.test(window.location.search);
+        var skip = (seen && !forceReplay) || reducedMotion;
+
+        if (skip) {
+            // 已经在解析阶段隐藏了，这里只做最终状态确认
+            veil.classList.add('opening--seen');
+            try { sessionStorage.setItem(OPENING_KEY, '1'); } catch (e) {}
+            window.__REDEFINE_OPENING_DONE__ = true;
+            return;
+        }
+
+        // documentElement 上的 .light / .dark 由 head 内联脚本同步写入，此时已就绪
+
+        // 会话标记立刻落盘：即使访客马上刷新，也不会重播
+        try { sessionStorage.setItem(OPENING_KEY, '1'); } catch (e) {}
+
+        // 正式播放
+        veil.classList.remove('opening--seen');
+        document.body.classList.add('opening--active');
+
+        var duration = <%= openingDuration %>;
+        var finished = false;
+        var pageLoaded = false;
+        var curtainEnded = false;
+        var hardCapReached = false;
+
+        // 撤幕布的时机：
+        //   · load 事件本身不撤幕布（它常常早于动画结束，一撤就变成"闪一下"），
+        //     只记录 pageLoaded；撤幕布由动画结束事件负责。
+        //   · 动画走完但页面仍未 load 时（慢网），先保持遮挡，
+        //     交给兜底计时器放行。
+        //   · 访客主动跳过（force）不受任何限制。
+        function dismiss(force) {
+            if (finished) { return; }
+            if (!force && !curtainEnded && !hardCapReached) {
+                return;
+            }
+            finished = true;
+
+            window.clearTimeout(hardCap);
+            window.clearTimeout(loadFallback);
+
+            // 从当前播放位置平滑快进到结束，而不是硬切
+            try {
+                veil.getAnimations({ subtree: true }).forEach(function (anim) {
+                    anim.finish();
+                });
+            } catch (e) {
+                /* 老浏览器不支持 getAnimations，走下面的兜底 */
+            }
+
+            veil.classList.add('opening--seen');
+            document.body.classList.remove('opening--active');
+
+            window.removeEventListener('keydown', onKeydown);
+            veil.removeEventListener('click', skipNow);
+            veil.removeEventListener('touchstart', skipNow);
+        }
+
+        // 正常路径：动画自然播完。此时若页面还没 load（慢网），
+        // 先保持遮挡，交给下面的兜底计时器放行。
+        veil.addEventListener('animationend', function (e) {
+            if (e.target === veil && e.animationName === 'opening-curtain-lift') {
+                if (pageLoaded) {
+                    dismiss(false);
+                } else {
+                    curtainEnded = true; // 等 load 或兜底计时器
+                }
+            }
+        });
+
+        // load 事件：通常早于动画结束，所以这里只记录状态，
+        // 真正撤幕布仍由动画结束事件负责（避免动画被腰斩成"闪一下"）。
+        if (document.readyState === 'complete') {
+            pageLoaded = true;
+        } else {
+            window.addEventListener('load', function () {
+                pageLoaded = true;
+                if (curtainEnded) { dismiss(false); }
+            }, { once: true });
+        }
+
+        // 兜底 1：load 迟迟不来（图多、网慢），到 duration + 800ms 就放人
+        var loadFallback = window.setTimeout(function () { dismiss(false); }, duration + 800);
+
+        // 兜底 2：绝不允许无限遮挡的硬上限
+        var hardCap = window.setTimeout(function () {
+            hardCapReached = true;
+            dismiss(false);
+        }, duration + 1200);
+
+        // 访客主动跳过：不受时长门槛限制
+        function skipNow() { dismiss(true); }
+        veil.addEventListener('click', skipNow);
+        veil.addEventListener('touchstart', skipNow, { passive: true });
+
+        function onKeydown(e) {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { dismiss(true); }
+        }
+        window.addEventListener('keydown', onKeydown);
+
+        window.__REDEFINE_OPENING_DONE__ = true;
+    })();
+</script>
+<% } %>
