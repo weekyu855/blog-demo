@@ -451,15 +451,25 @@ plugins:
   aplayer:
     enable: true # Whether to enable
     type: fixed # fixed, mini
+    # 音频与封面放在 source/music/ 下，构建后对应站点路径 /music/xxx
+    # 下面 4 首均为公共领域(Public Domain)或 CC0 音频，可自由使用，换成自己的歌时直接替换 url/cover 即可
     audios:
-      - name: Imagine # audio name
-        artist: John Lennon # audio artist
-        url: https://evan.beee.top/music/Imagine%20-%20John%20Lennon.mp3 # audio url
-        cover: https://evan.beee.top/music/covers/Lennon_Imagine_Sleeve_1975.jpg # audio cover
-      - name: Something Just Like This
-        artist: Coldplay
-        url: https://evan.beee.top/music/Something%20Just%20Like%20This%20-%20The%20Chainsmokers%E3%80%81Coldplay.mp3
-        cover: https://evan.beee.top/music/covers/Something_Just_Like_This.png
+      - name: "Ariadne Musica - Prelude & Fugue No.1" # audio name
+        artist: "J. C. F. Fischer / Eduardo Feld" # audio artist
+        url: /music/fischer-prelude-fugue.mp3 # audio url
+        cover: /music/covers/fischer-prelude-fugue.jpg # audio cover
+      - name: "Nocturne in C minor, B.108" # 来源: Wikimedia Commons, CC0
+        artist: "Frederic Chopin"
+        url: /music/chopin-nocturne-b108.mp3
+        cover: /music/covers/chopin-nocturne-b108.jpg
+      - name: "Clair de Lune" # 来源: Wikimedia Commons, Public Domain (Wright Brass)
+        artist: "Claude Debussy"
+        url: /music/clair-de-lune-wright-brass.mp3
+        cover: /music/covers/clair-de-lune-wright-brass.jpg
+      - name: "Waltz in E minor, B.56" # 来源: Wikimedia Commons, Public Domain
+        artist: "Frederic Chopin"
+        url: /music/chopin-waltz-e-minor.mp3
+        cover: /music/covers/chopin-waltz-e-minor.jpg
 # .... you can add more audios here
   # Mermaid JS. Requires hexo-filter-mermaid-diagrams (npm i hexo-filter-mermaid-diagrams). See https://mermaid.js.org/
   mermaid:
