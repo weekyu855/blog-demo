@@ -1,0 +1,20 @@
+# 依赖（由 CI 的 npm install 或本地 npm install 生成）
+node_modules/
+
+# Hexo 生成物与缓存（由 npm run build 生成，不提交）
+public/
+db.json
+.deploy_git/
+.hexo/
+
+# 日志
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# 编辑器 / 系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
