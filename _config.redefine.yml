@@ -233,6 +233,9 @@ navbar:
     Photo: #取名随意
       icon: fa-solid fa-image #图标
       path: /masonry/ 
+    AI 绘图: #本站新增：Cloudflare Workers AI 文生图
+      icon: fa-solid fa-wand-magic-sparkles #图标
+      path: /ai-image/ 
     # Bookmarks: #取名随意
     #  icon: fa-solid fa-bookmark #图标
     #  path: /bookmarks/

@@ -10,6 +10,11 @@
     module: true
 }) %>
 
+<!-- AI 绘图页（/ai-image/）逻辑；脚本自己会判断当前页面有没有对应容器，没有就直接返回 -->
+<%- renderJS('tools/aiImage.js', {
+    module: true
+}) %>
+
 <% if (theme.navbar.search.enable) { %>
     <%- renderJS('tools/localSearch.js', {
         module: true

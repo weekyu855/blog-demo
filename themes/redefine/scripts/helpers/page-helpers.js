@@ -82,6 +82,12 @@ const pageData = {
 		partial: "pages/bookmarks/bookmarks",
 		layout: "raw",
 	},
+	aiImage: {
+		titles: ["ai 绘图", "ai绘图", "ai image", "ai-image"],
+		types: ["ai-image", "aiimage", "ai_image"],
+		partial: "pages/ai-image/ai-image",
+		layout: "default",
+	},
 	pageTemplate: {
 		titles: [],
 		types: [],
