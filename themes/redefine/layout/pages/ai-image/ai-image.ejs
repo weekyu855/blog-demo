@@ -9,8 +9,7 @@
 		<div class="ai-image-card">
 			<div class="ai-image-field ai-image-password-field">
 				<label class="ai-image-label" for="ai-image-password">访问密码</label>
-				<input id="ai-image-password" type="password" autocomplete="off" placeholder="朋友向 · 没有设密码的接口留空即可" />
-				<p class="ai-image-help">密码只在你的浏览器本地记住（localStorage），页面源码里没有明文；输对一次之后就不用再输。</p>
+				<input id="ai-image-password" type="password" autocomplete="off" placeholder="请输入访问密码" />
 			</div>
 
 			<div class="ai-image-field">
@@ -18,48 +17,63 @@
 					<label class="ai-image-label" for="ai-image-prompt">正向提示词</label>
 					<button type="button" class="ai-image-btn is-ghost ai-image-random">随机提示词</button>
 				</div>
-				<textarea id="ai-image-prompt" rows="4" placeholder="例如：a lighthouse at dusk, minimal flat illustration, muted colors"></textarea>
-				<p class="ai-image-help">用英文描述通常效果更好，写清楚主体、风格、光线和氛围。按 Ctrl / ⌘ + Enter 可以直接生成。</p>
-			</div>
-
-			<div class="ai-image-field" data-only-non-flux>
-				<label class="ai-image-label" for="ai-image-negative">反向提示词（可选）</label>
-				<textarea id="ai-image-negative" rows="2" placeholder="不想出现的东西，例如：blurry, watermark, extra fingers"></textarea>
+				<textarea id="ai-image-prompt" rows="4" placeholder="描述想要生成的图像内容与风格，例如：a lighthouse at dusk, minimal flat illustration"></textarea>
+				<p class="ai-image-help">用英文描述通常效果更好。按 Ctrl / ⌘ + Enter 可以直接生成。</p>
 			</div>
 
 			<div class="ai-image-field">
-				<label class="ai-image-label" for="ai-image-model">模型</label>
+				<label class="ai-image-label" for="ai-image-negative">反向提示词</label>
+				<textarea id="ai-image-negative" rows="2" placeholder="描述希望避免出现的元素，例如：blurry, watermark, extra fingers"></textarea>
+			</div>
+
+			<div class="ai-image-field">
+				<label class="ai-image-label" for="ai-image-model">文生图模型</label>
 				<select id="ai-image-model">
 					<option value="flux-1-schnell">FLUX.1 [schnell]</option>
 				</select>
 				<p class="ai-image-help ai-image-model-hint"></p>
 			</div>
 
-			<details class="ai-image-advanced">
+			<details class="ai-image-advanced" open>
 				<summary>高级选项</summary>
 				<div class="ai-image-grid">
-					<div class="ai-image-field" data-only-non-flux>
-						<label class="ai-image-label" for="ai-image-width">宽度</label>
-						<input id="ai-image-width" type="number" value="1024" min="256" max="1024" step="64" />
-					</div>
-					<div class="ai-image-field" data-only-non-flux>
-						<label class="ai-image-label" for="ai-image-height">高度</label>
-						<input id="ai-image-height" type="number" value="1024" min="256" max="1024" step="64" />
+					<div class="ai-image-field">
+						<div class="ai-image-label-row">
+							<label class="ai-image-label" for="ai-image-width">图像宽度</label>
+							<span class="ai-image-value" data-value-for="ai-image-width">1024</span>
+						</div>
+						<input id="ai-image-width" type="range" min="256" max="2048" step="64" value="1024" />
 					</div>
 					<div class="ai-image-field">
-						<label class="ai-image-label" for="ai-image-steps">迭代步数</label>
-						<input id="ai-image-steps" type="number" value="4" min="4" max="8" step="1" />
+						<div class="ai-image-label-row">
+							<label class="ai-image-label" for="ai-image-height">图像高度</label>
+							<span class="ai-image-value" data-value-for="ai-image-height">1024</span>
+						</div>
+						<input id="ai-image-height" type="range" min="256" max="2048" step="64" value="1024" />
 					</div>
-					<div class="ai-image-field" data-only-non-flux>
-						<label class="ai-image-label" for="ai-image-guidance">引导系数</label>
-						<input id="ai-image-guidance" type="number" value="7.5" min="1" max="20" step="0.5" />
+					<div class="ai-image-field">
+						<div class="ai-image-label-row">
+							<label class="ai-image-label" for="ai-image-steps">迭代步数</label>
+							<span class="ai-image-value" data-value-for="ai-image-steps">4</span>
+						</div>
+						<input id="ai-image-steps" type="range" min="1" max="20" step="1" value="4" />
+						<p class="ai-image-help">更高的步数通常细节更足，但处理时间更长。</p>
 					</div>
-					<div class="ai-image-field" data-only-non-flux>
+					<div class="ai-image-field">
+						<div class="ai-image-label-row">
+							<label class="ai-image-label" for="ai-image-guidance">引导系数</label>
+							<span class="ai-image-value" data-value-for="ai-image-guidance">7.5</span>
+						</div>
+						<input id="ai-image-guidance" type="range" min="0" max="30" step="0.5" value="7.5" />
+						<p class="ai-image-help">控制生成结果与提示词的贴合程度，越高越严格。</p>
+					</div>
+					<div class="ai-image-field">
 						<label class="ai-image-label" for="ai-image-seed">随机种子</label>
-						<input id="ai-image-seed" type="text" inputmode="numeric" placeholder="留空即随机" />
+						<input id="ai-image-seed" type="number" min="0" max="1048575" placeholder="留空即随机" />
+						<p class="ai-image-help">种子与参数都相同时，可以得到相近的图像。</p>
 					</div>
 				</div>
-				<p class="ai-image-help">FLUX.1 [schnell] 只用提示词和步数（4–8），其余参数会被忽略；步数越多越慢，出图时间也和免费额度是否排队有关。</p>
+				<p class="ai-image-help">FLUX.1 [schnell] 只接受提示词和迭代步数（超出 4–8 会被服务端夹到区间内），其余参数它不理会。</p>
 			</details>
 
 			<div class="ai-image-actions">
@@ -301,9 +315,60 @@
 
 	.ai-image-page .ai-image-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-		gap: 0.9rem 1rem;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 0.9rem 1.4rem;
 		margin-top: 1rem;
+	}
+
+	.ai-image-page .ai-image-value {
+		font-size: 0.85rem;
+		font-weight: 700;
+		color: var(--primary-color);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.ai-image-page input[type="range"] {
+		width: 100%;
+		height: 1.4rem;
+		padding: 0;
+		border: none;
+		background: transparent;
+		-webkit-appearance: none;
+		appearance: none;
+		cursor: pointer;
+	}
+
+	.ai-image-page input[type="range"]::-webkit-slider-runnable-track {
+		height: 4px;
+		border-radius: 999px;
+		background: var(--third-background-color);
+		border: 1px solid var(--border-color);
+	}
+
+	.ai-image-page input[type="range"]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		width: 15px;
+		height: 15px;
+		margin-top: -6px;
+		border-radius: 50%;
+		background: var(--primary-color);
+		border: 2px solid var(--background-color);
+	}
+
+	.ai-image-page input[type="range"]::-moz-range-track {
+		height: 4px;
+		border-radius: 999px;
+		background: var(--third-background-color);
+		border: 1px solid var(--border-color);
+	}
+
+	.ai-image-page input[type="range"]::-moz-range-thumb {
+		width: 13px;
+		height: 13px;
+		border-radius: 50%;
+		background: var(--primary-color);
+		border: 2px solid var(--background-color);
 	}
 
 	.ai-image-page .ai-image-grid .ai-image-field {
@@ -431,10 +496,6 @@
 		font-size: 0.8rem;
 		line-height: 1.8;
 		color: var(--third-text-color);
-	}
-
-	.ai-image-page .is-hidden {
-		display: none !important;
 	}
 
 	@media (max-width: 768px) {

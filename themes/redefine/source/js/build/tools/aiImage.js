@@ -175,32 +175,44 @@ function aiImageSelectedModel(root) {
 	return select ? select.value : "flux-1-schnell";
 }
 
+function aiImageSyncValue(root, id) {
+	const input = aiImageEl("#" + id, root);
+	const output = aiImageEl('[data-value-for="' + id + '"]', root);
+	if (input && output) output.textContent = input.value;
+}
+
+function aiImageSyncValues(root) {
+	[
+		"ai-image-width",
+		"ai-image-height",
+		"ai-image-steps",
+		"ai-image-guidance",
+	].forEach((id) => aiImageSyncValue(root, id));
+}
+
 function aiImageApplyModel(root, resetSteps) {
 	const model = aiImageSelectedModel(root);
 	const isFlux = model === "flux-1-schnell";
 
-	// FLUX.1 schnell 只接受 prompt + steps，其它参数会被 Worker 忽略
-	aiImageEls("[data-only-non-flux]", root).forEach((el) => {
-		el.classList.toggle("is-hidden", isFlux);
-	});
-
+	// 所有参数始终可见（FLUX 不理会的那几个也一样，避免看起来"功能缺了"）
 	const steps = aiImageEl("#ai-image-steps", root);
 	if (steps) {
-		const min = isFlux ? 4 : 1;
-		const max = isFlux ? 8 : 20;
 		const fallback = AI_IMAGE_STEPS_DEFAULT[model] || (isFlux ? 4 : 20);
-		steps.min = String(min);
-		steps.max = String(max);
 		steps.value = String(
-			resetSteps ? fallback : aiImageClamp(steps.value, min, max, fallback)
+			resetSteps ? fallback : aiImageClamp(steps.value, 1, 20, fallback)
 		);
 	}
 
 	const hint = aiImageEl(".ai-image-model-hint", root);
 	if (hint) {
 		const current = AI_IMAGE_STATE.models.filter((m) => m.id === model)[0];
-		hint.textContent = current && current.description ? current.description : "";
+		const description = current && current.description ? current.description : "";
+		hint.textContent = isFlux
+			? description + "（只使用提示词和迭代步数，其余参数会被忽略）"
+			: description;
 	}
+
+	aiImageSyncValues(root);
 }
 
 function aiImageCollectPayload(root) {
@@ -213,6 +225,7 @@ function aiImageCollectPayload(root) {
 	if (password) payload.password = password;
 
 	if (model === "flux-1-schnell") {
+		// 服务端会把 FLUX 的步数夹到 4–8，这里先夹好，保证「复制参数」显示的就是实际值
 		payload.num_steps = aiImageClamp(
 			(aiImageEl("#ai-image-steps", root) || {}).value,
 			4,
@@ -227,13 +240,13 @@ function aiImageCollectPayload(root) {
 	payload.width = aiImageClamp(
 		(aiImageEl("#ai-image-width", root) || {}).value,
 		256,
-		1024,
+		2048,
 		1024
 	);
 	payload.height = aiImageClamp(
 		(aiImageEl("#ai-image-height", root) || {}).value,
 		256,
-		1024,
+		2048,
 		1024
 	);
 	payload.num_steps = aiImageClamp(
@@ -541,6 +554,19 @@ function aiImageBind(root) {
 	if (againButton) {
 		againButton.addEventListener("click", () => aiImageGenerate(root));
 	}
+
+	// 滑动条：实时把数值显示在标签右边
+	[
+		"ai-image-width",
+		"ai-image-height",
+		"ai-image-steps",
+		"ai-image-guidance",
+	].forEach((id) => {
+		const input = aiImageEl("#" + id, root);
+		if (input) {
+			input.addEventListener("input", () => aiImageSyncValue(root, id));
+		}
+	});
 
 	aiImageApplyModel(root);
 }
