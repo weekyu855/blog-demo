@@ -15,6 +15,7 @@
 
 const AI_IMAGE_ENDPOINT = "https://image.weekyu.dpdns.org/";
 const AI_IMAGE_MAX_WAIT = 120000; // 单次生成的最长等待时间（毫秒）
+const AI_IMAGE_PASSWORD_KEY = "week-ai-image-password"; // 访问密码存在本地，页面源码里不放明文
 
 // 接口不可用时的兜底模型列表（与 Worker 里的 AVAILABLE_MODELS 保持一致）
 const AI_IMAGE_MODELS_FALLBACK = [
@@ -207,6 +208,10 @@ function aiImageCollectPayload(root) {
 	const prompt = (aiImageEl("#ai-image-prompt", root) || {}).value || "";
 	const payload = { prompt: prompt.trim(), model };
 
+	// 接口如果设了 PASSWORDS，就需要把密码一起发给 Worker 校验；留空则不带这个字段
+	const password = ((aiImageEl("#ai-image-password", root) || {}).value || "").trim();
+	if (password) payload.password = password;
+
 	if (model === "flux-1-schnell") {
 		payload.num_steps = aiImageClamp(
 			(aiImageEl("#ai-image-steps", root) || {}).value,
@@ -283,6 +288,31 @@ function aiImageLoadModels(root) {
 		});
 }
 
+/* ---------------------------------------------------------------- 访问密码 */
+
+function aiImageLoadPassword(root) {
+	const input = aiImageEl("#ai-image-password", root);
+	if (!input) return;
+	try {
+		const saved = window.localStorage.getItem(AI_IMAGE_PASSWORD_KEY);
+		if (saved) input.value = saved;
+	} catch (error) {
+		// 隐私模式 / 禁用存储时忽略，不影响正常使用
+	}
+}
+
+function aiImageRememberPassword(root, payload) {
+	try {
+		if (payload && payload.password) {
+			window.localStorage.setItem(AI_IMAGE_PASSWORD_KEY, payload.password);
+		} else {
+			window.localStorage.removeItem(AI_IMAGE_PASSWORD_KEY);
+		}
+	} catch (error) {
+		// 同上
+	}
+}
+
 /* ---------------------------------------------------------------- 生成流程 */
 
 function aiImageReadError(res) {
@@ -305,7 +335,7 @@ function aiImageFriendlyError(error) {
 		return "Cloudflare 免费额度今天可能已经用完了，请过一段时间再试。";
 	}
 	if (error && error.status === 403) {
-		return "这个接口开启了访问密码，需要先在 Worker 侧放行。";
+		return "需要访问密码：这个接口只对朋友开放，在「访问密码」里填对之后再来一次。";
 	}
 	if (error && error.status === 400) {
 		return "参数不合法：" + (error.message || "请检查提示词与模型") + "。";
@@ -331,9 +361,14 @@ function aiImageShowResult(root, blob, payload, elapsed, ext) {
 	}
 
 	const filename = "week-ai-" + aiImageTimestamp(new Date()) + "." + (ext || "png");
+
+	// 存参数时去掉密码，避免「复制参数」把密码带进剪贴板
+	const safePayload = Object.assign({}, payload);
+	delete safePayload.password;
+
 	AI_IMAGE_STATE.lastResult = {
 		blob: blob,
-		payload: payload,
+		payload: safePayload,
 		filename: filename,
 		url: AI_IMAGE_STATE.objectUrl,
 	};
@@ -394,6 +429,8 @@ function aiImageGenerate(root) {
 			const sniffed = aiImageSniff(buf);
 			const blob = new Blob([buf], { type: sniffed.mime });
 			aiImageShowResult(root, blob, payload, Date.now() - startedAt, sniffed.ext);
+			// 生成成功才记住密码，避免把输错的密码存下来
+			aiImageRememberPassword(root, payload);
 		})
 		.catch((error) => {
 			aiImageSetStage(root, "error");
@@ -517,6 +554,7 @@ function aiImageInit() {
 	root.dataset.aiImageReady = "1";
 	aiImageBind(root);
 	aiImageSetStage(root, "empty");
+	aiImageLoadPassword(root);
 	// 先用本地兜底列表把下拉框填满，拿到接口列表后再覆盖
 	aiImageRenderModels(root, AI_IMAGE_STATE.models);
 	aiImageApplyModel(root);

@@ -7,6 +7,12 @@
 
 	<form class="ai-image-form">
 		<div class="ai-image-card">
+			<div class="ai-image-field ai-image-password-field">
+				<label class="ai-image-label" for="ai-image-password">访问密码</label>
+				<input id="ai-image-password" type="password" autocomplete="off" placeholder="朋友向 · 没有设密码的接口留空即可" />
+				<p class="ai-image-help">密码只在你的浏览器本地记住（localStorage），页面源码里没有明文；输对一次之后就不用再输。</p>
+			</div>
+
 			<div class="ai-image-field">
 				<div class="ai-image-label-row">
 					<label class="ai-image-label" for="ai-image-prompt">正向提示词</label>
@@ -136,6 +142,16 @@
 
 	.ai-image-page .ai-image-field:last-child {
 		margin-bottom: 0;
+	}
+
+	.ai-image-page .ai-image-password-field {
+		padding-bottom: 1.1rem;
+		margin-bottom: 1.1rem;
+		border-bottom: 1px dashed var(--border-color);
+	}
+
+	.ai-image-page .ai-image-password-field input {
+		max-width: 22rem;
 	}
 
 	.ai-image-page .ai-image-label-row {
